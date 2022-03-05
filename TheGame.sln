@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Server", "TheGame.Server\TheGame.Server.csproj", "{80023C66-01E2-439B-AD4F-72A06364D378}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Client", "TheGame.Client\TheGame.Client.csproj", "{AB4BC6A5-8BFA-44D0-BE4B-DB52D48D3A3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Core", "TheGame.Core\TheGame.Core.csproj", "{EF4D96E0-9D9B-4CBB-8897-E1892E8EEC7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{80023C66-01E2-439B-AD4F-72A06364D378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80023C66-01E2-439B-AD4F-72A06364D378}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80023C66-01E2-439B-AD4F-72A06364D378}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80023C66-01E2-439B-AD4F-72A06364D378}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB4BC6A5-8BFA-44D0-BE4B-DB52D48D3A3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB4BC6A5-8BFA-44D0-BE4B-DB52D48D3A3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB4BC6A5-8BFA-44D0-BE4B-DB52D48D3A3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB4BC6A5-8BFA-44D0-BE4B-DB52D48D3A3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF4D96E0-9D9B-4CBB-8897-E1892E8EEC7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF4D96E0-9D9B-4CBB-8897-E1892E8EEC7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF4D96E0-9D9B-4CBB-8897-E1892E8EEC7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF4D96E0-9D9B-4CBB-8897-E1892E8EEC7A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
