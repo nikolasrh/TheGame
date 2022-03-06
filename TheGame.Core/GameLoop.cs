@@ -13,26 +13,37 @@ public class GameLoop
         _logger = logger;
     }
 
-    public async Task Run()
+    public async Task Run(Action<TimeSpan> update)
     {
-        var prev = DateTime.Now;
+        var prev = DateTime.Now - _delayBetweenTicks;
 
         while (true)
         {
-            _logger.LogInformation("Beginning game loop");
+            var next = prev + _delayBetweenTicks + _delayBetweenTicks;
+            var delta = DateTime.Now - prev;
+            prev += delta;
 
-            var now = DateTime.Now;
+            _logger.LogInformation("Updating, delta is {0} ms", delta.TotalMilliseconds);
 
-            var next = prev + _delayBetweenTicks;
+            update(delta);
 
-            var delay = next > now
-                ? next - now
-                : TimeSpan.Zero;
-
-            prev = now + delay;
-
-            _logger.LogInformation("End game loop. Starting next in {0} ms", delay.TotalMilliseconds);
-            await Task.Delay(delay);
+            await Delay(next);
         }
+
+    }
+
+    private Task Delay(DateTime next)
+    {
+        var now = DateTime.Now;
+
+        if (next > now)
+        {
+            var delay = next - now;
+            _logger.LogInformation("Next update in {0} ms", delay.TotalMilliseconds);
+            return Task.Delay(delay);
+        }
+
+        _logger.LogInformation("Running next update immediately");
+        return Task.CompletedTask;
     }
 }
