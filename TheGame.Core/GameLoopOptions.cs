@@ -1,3 +1,3 @@
 namespace TheGame.Core;
 
-public record GameLoopOptions(int tickRate);
+public readonly record struct GameLoopOptions(int tickRate);
