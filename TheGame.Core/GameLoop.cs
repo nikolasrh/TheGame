@@ -23,7 +23,7 @@ public class GameLoop
             var delta = DateTime.Now - prev;
             prev += delta;
 
-            _logger.LogInformation("Updating, delta is {0} ms", delta.TotalMilliseconds);
+            _logger.LogDebug("Updating, delta is {0} ms", delta.TotalMilliseconds);
 
             update(delta);
 
@@ -39,11 +39,11 @@ public class GameLoop
         if (next > now)
         {
             var delay = next - now;
-            _logger.LogInformation("Next update in {0} ms", delay.TotalMilliseconds);
+            _logger.LogDebug("Next update in {0} ms", delay.TotalMilliseconds);
             return Task.Delay(delay);
         }
 
-        _logger.LogInformation("Running next update immediately");
+        _logger.LogDebug("Running next update immediately");
         return Task.CompletedTask;
     }
 }
