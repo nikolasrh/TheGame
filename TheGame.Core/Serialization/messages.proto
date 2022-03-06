@@ -1,0 +1,12 @@
+syntax = "proto3";
+package TheGame.Core.Serialization;
+
+message GameEvent {
+  oneof event {
+    ChatMessage chatMessage = 1;
+  }
+}
+
+message ChatMessage {
+  string text = 1;
+}
