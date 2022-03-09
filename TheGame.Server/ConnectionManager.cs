@@ -5,14 +5,15 @@ using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
 
 using TheGame.Core;
-using TheGame.Core.Serialization;
+using TheGame.Core.Protobuf;
+using TheGame.Server.Serialization;
 
 namespace TheGame.Server;
 
 public class ConnectionManager
 {
     private readonly TcpListener _listener;
-    private readonly ConcurrentBag<(Connection, Task)> _connections = new();
+    private readonly ConcurrentDictionary<Guid, Connection> _connections = new();
     private readonly ILogger<ConnectionManager> _logger;
 
     public ConnectionManager(IPAddress ip, int port, ILogger<ConnectionManager> logger)
@@ -31,10 +32,12 @@ public class ConnectionManager
             {
                 _logger.LogInformation("Waiting for connection...");
                 var client = await _listener.AcceptTcpClientAsync(cancellationToken);
+
                 var connection = new Connection(client, _logger);
-                var readingTask = ReadContinuously(connection, _logger);
-                _connections.Add((connection, readingTask));
-                _logger.LogInformation("New connection with guid {0}", connection.Id);
+
+                var _ = Task.Run(() => HandleConnection(connection));
+
+                _logger.LogInformation("New connection {0}", connection.Id);
             }
         }
         catch
@@ -43,17 +46,63 @@ public class ConnectionManager
         }
     }
 
-    private static async Task ReadContinuously(Connection connection, ILogger logger)
+    private async Task HandleConnection(Connection connection)
     {
-        while (true)
+        var playerId = connection.Id.ToString();
+        var serverMessage = Serializer.Serialize(new ServerMessage
         {
-            var data = await connection.Read();
-            var gameEvent = Serializer.Deserialize(data);
-
-            if (gameEvent.EventCase == GameEvent.EventOneofCase.ChatMessage)
+            PlayerJoined = new PlayerJoined
             {
-                logger.LogInformation("Received chat message: {0}", gameEvent.ChatMessage.Text);
+                Player = new Player
+                {
+                    Id = playerId
+                }
             }
+        });
+
+        var _ = Task.Run(async () =>
+        {
+            var tasks = _connections.Select(connection => connection.Value.Write(serverMessage)).ToArray();
+            await Task.WhenAll(tasks);
+        });
+
+        if (_connections.TryAdd(connection.Id, connection))
+        {
+            while (true)
+            {
+                var data = await connection.Read();
+                var clientMessage = Serializer.Deserialize(data);
+                HandleClientMessage(connection.Id, clientMessage);
+            }
+        }
+    }
+
+    private void HandleClientMessage(Guid connectionId, ClientMessage clientMessage)
+    {
+        switch (clientMessage.MessageCase)
+        {
+            case ClientMessage.MessageOneofCase.SendChat:
+                _logger.LogInformation("Received chat message: {0}", clientMessage.SendChat.Text);
+                var playerId = connectionId.ToString();
+
+                var serverMessage = Serializer.Serialize(new ServerMessage
+                {
+                    Chat = new Chat
+                    {
+                        Player = new Player
+                        {
+                            Id = playerId
+                        },
+                        Text = clientMessage.SendChat.Text
+                    }
+                });
+
+                var _ = Task.Run(async () =>
+                {
+                    var tasks = _connections.Select(connection => connection.Value.Write(serverMessage)).ToArray();
+                    await Task.WhenAll(tasks);
+                });
+                break;
         }
     }
 }

@@ -1,0 +1,37 @@
+syntax = "proto3";
+package TheGame.Core.Protobuf;
+
+message ServerMessage {
+  oneof message {
+    PlayerJoined player_joined = 1;
+    PlayerLeft player_left = 2;
+    Chat chat = 3;
+  }
+}
+
+message Player {
+  string id = 1;
+}
+
+message PlayerJoined {
+  Player player = 1;
+}
+
+message PlayerLeft {
+  Player player = 1;
+}
+
+message Chat {
+  Player player = 1;
+  string text = 2;
+}
+
+message ClientMessage {
+  oneof message {
+    SendChat send_chat = 1;
+  }
+}
+
+message SendChat {
+  string text = 1;
+}
