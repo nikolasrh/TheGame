@@ -35,7 +35,8 @@ public class ConnectionManager
 
                 var connection = new Connection(client, _logger);
 
-                var _ = Task.Run(() => HandleConnection(connection));
+                // TODO: Decide if Task.Run is a good solution
+                var _ = Task.Run(() => HandleNewConnection(connection));
 
                 _logger.LogInformation("New connection {0}", connection.Id);
             }
@@ -46,9 +47,10 @@ public class ConnectionManager
         }
     }
 
-    private async Task HandleConnection(Connection connection)
+    // TODO: Change to EventHandler
+    private static async Task OnNewConnection(Connection newConnection, ConcurrentDictionary<Guid, Connection> existingConnections)
     {
-        var playerId = connection.Id.ToString();
+        var playerId = newConnection.Id.ToString();
         var serverMessage = Serializer.Serialize(new ServerMessage
         {
             PlayerJoined = new PlayerJoined
@@ -60,30 +62,20 @@ public class ConnectionManager
             }
         });
 
-        var _ = Task.Run(async () =>
-        {
-            var tasks = _connections.Select(connection => connection.Value.Write(serverMessage)).ToArray();
-            await Task.WhenAll(tasks);
-        });
-
-        if (_connections.TryAdd(connection.Id, connection))
-        {
-            while (true)
-            {
-                var data = await connection.Read();
-                var clientMessage = Serializer.Deserialize(data);
-                HandleClientMessage(connection.Id, clientMessage);
-            }
-        }
+        var tasks = existingConnections.Select(connection => connection.Value.Write(serverMessage));
+        await Task.WhenAll(tasks);
     }
 
-    private void HandleClientMessage(Guid connectionId, ClientMessage clientMessage)
+    // TODO: Change to EventHandler
+    private async Task OnRead(Connection connection, byte[] data)
     {
+        var clientMessage = Serializer.Deserialize(data);
+
         switch (clientMessage.MessageCase)
         {
             case ClientMessage.MessageOneofCase.SendChat:
                 _logger.LogInformation("Received chat message: {0}", clientMessage.SendChat.Text);
-                var playerId = connectionId.ToString();
+                var playerId = connection.Id.ToString();
 
                 var serverMessage = Serializer.Serialize(new ServerMessage
                 {
@@ -97,12 +89,21 @@ public class ConnectionManager
                     }
                 });
 
-                var _ = Task.Run(async () =>
-                {
-                    var tasks = _connections.Select(connection => connection.Value.Write(serverMessage)).ToArray();
-                    await Task.WhenAll(tasks);
-                });
+                var tasks = _connections.Select(connection => connection.Value.Write(serverMessage));
+                await Task.WhenAll(tasks);
                 break;
         }
+    }
+
+    private async Task HandleNewConnection(Connection connection)
+    {
+        await OnNewConnection(connection, _connections);
+
+        if (!_connections.TryAdd(connection.Id, connection))
+        {
+            // TODO: End connection
+        }
+
+        await Task.WhenAll(connection.StartWriting(), connection.StartReading(OnRead));
     }
 }
