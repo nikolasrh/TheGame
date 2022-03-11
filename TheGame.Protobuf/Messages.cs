@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace TheGame.Core.Protobuf {
+namespace TheGame.Protobuf {
 
   /// <summary>Holder for reflection information generated from messages.proto</summary>
   public static partial class MessagesReflection {
@@ -24,29 +24,28 @@ namespace TheGame.Core.Protobuf {
     static MessagesReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5tZXNzYWdlcy5wcm90bxIVVGhlR2FtZS5Db3JlLlByb3RvYnVmIr8BCg1T",
-            "ZXJ2ZXJNZXNzYWdlEjwKDXBsYXllcl9qb2luZWQYASABKAsyIy5UaGVHYW1l",
-            "LkNvcmUuUHJvdG9idWYuUGxheWVySm9pbmVkSAASOAoLcGxheWVyX2xlZnQY",
-            "AiABKAsyIS5UaGVHYW1lLkNvcmUuUHJvdG9idWYuUGxheWVyTGVmdEgAEisK",
-            "BGNoYXQYAyABKAsyGy5UaGVHYW1lLkNvcmUuUHJvdG9idWYuQ2hhdEgAQgkK",
-            "B21lc3NhZ2UiFAoGUGxheWVyEgoKAmlkGAEgASgJIj0KDFBsYXllckpvaW5l",
-            "ZBItCgZwbGF5ZXIYASABKAsyHS5UaGVHYW1lLkNvcmUuUHJvdG9idWYuUGxh",
-            "eWVyIjsKClBsYXllckxlZnQSLQoGcGxheWVyGAEgASgLMh0uVGhlR2FtZS5D",
-            "b3JlLlByb3RvYnVmLlBsYXllciJDCgRDaGF0Ei0KBnBsYXllchgBIAEoCzId",
-            "LlRoZUdhbWUuQ29yZS5Qcm90b2J1Zi5QbGF5ZXISDAoEdGV4dBgCIAEoCSJQ",
-            "Cg1DbGllbnRNZXNzYWdlEjQKCXNlbmRfY2hhdBgBIAEoCzIfLlRoZUdhbWUu",
-            "Q29yZS5Qcm90b2J1Zi5TZW5kQ2hhdEgAQgkKB21lc3NhZ2UiGAoIU2VuZENo",
-            "YXQSDAoEdGV4dBgBIAEoCWIGcHJvdG8z"));
+            "Cg5tZXNzYWdlcy5wcm90bxIQVGhlR2FtZS5Qcm90b2J1ZiKwAQoNU2VydmVy",
+            "TWVzc2FnZRI3Cg1wbGF5ZXJfam9pbmVkGAEgASgLMh4uVGhlR2FtZS5Qcm90",
+            "b2J1Zi5QbGF5ZXJKb2luZWRIABIzCgtwbGF5ZXJfbGVmdBgCIAEoCzIcLlRo",
+            "ZUdhbWUuUHJvdG9idWYuUGxheWVyTGVmdEgAEiYKBGNoYXQYAyABKAsyFi5U",
+            "aGVHYW1lLlByb3RvYnVmLkNoYXRIAEIJCgdtZXNzYWdlIhQKBlBsYXllchIK",
+            "CgJpZBgBIAEoCSI4CgxQbGF5ZXJKb2luZWQSKAoGcGxheWVyGAEgASgLMhgu",
+            "VGhlR2FtZS5Qcm90b2J1Zi5QbGF5ZXIiNgoKUGxheWVyTGVmdBIoCgZwbGF5",
+            "ZXIYASABKAsyGC5UaGVHYW1lLlByb3RvYnVmLlBsYXllciI+CgRDaGF0EigK",
+            "BnBsYXllchgBIAEoCzIYLlRoZUdhbWUuUHJvdG9idWYuUGxheWVyEgwKBHRl",
+            "eHQYAiABKAkiSwoNQ2xpZW50TWVzc2FnZRIvCglzZW5kX2NoYXQYASABKAsy",
+            "Gi5UaGVHYW1lLlByb3RvYnVmLlNlbmRDaGF0SABCCQoHbWVzc2FnZSIYCghT",
+            "ZW5kQ2hhdBIMCgR0ZXh0GAEgASgJYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Core.Protobuf.ServerMessage), global::TheGame.Core.Protobuf.ServerMessage.Parser, new[]{ "PlayerJoined", "PlayerLeft", "Chat" }, new[]{ "Message" }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Core.Protobuf.Player), global::TheGame.Core.Protobuf.Player.Parser, new[]{ "Id" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Core.Protobuf.PlayerJoined), global::TheGame.Core.Protobuf.PlayerJoined.Parser, new[]{ "Player" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Core.Protobuf.PlayerLeft), global::TheGame.Core.Protobuf.PlayerLeft.Parser, new[]{ "Player" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Core.Protobuf.Chat), global::TheGame.Core.Protobuf.Chat.Parser, new[]{ "Player", "Text" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Core.Protobuf.ClientMessage), global::TheGame.Core.Protobuf.ClientMessage.Parser, new[]{ "SendChat" }, new[]{ "Message" }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Core.Protobuf.SendChat), global::TheGame.Core.Protobuf.SendChat.Parser, new[]{ "Text" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.ServerMessage), global::TheGame.Protobuf.ServerMessage.Parser, new[]{ "PlayerJoined", "PlayerLeft", "Chat" }, new[]{ "Message" }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.Player), global::TheGame.Protobuf.Player.Parser, new[]{ "Id" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.PlayerJoined), global::TheGame.Protobuf.PlayerJoined.Parser, new[]{ "Player" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.PlayerLeft), global::TheGame.Protobuf.PlayerLeft.Parser, new[]{ "Player" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.Chat), global::TheGame.Protobuf.Chat.Parser, new[]{ "Player", "Text" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.ClientMessage), global::TheGame.Protobuf.ClientMessage.Parser, new[]{ "SendChat" }, new[]{ "Message" }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.SendChat), global::TheGame.Protobuf.SendChat.Parser, new[]{ "Text" }, null, null, null)
           }));
     }
     #endregion
@@ -61,7 +60,7 @@ namespace TheGame.Core.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TheGame.Core.Protobuf.MessagesReflection.Descriptor.MessageTypes[0]; }
+      get { return global::TheGame.Protobuf.MessagesReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -101,8 +100,8 @@ namespace TheGame.Core.Protobuf {
     /// <summary>Field number for the "player_joined" field.</summary>
     public const int PlayerJoinedFieldNumber = 1;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::TheGame.Core.Protobuf.PlayerJoined PlayerJoined {
-      get { return messageCase_ == MessageOneofCase.PlayerJoined ? (global::TheGame.Core.Protobuf.PlayerJoined) message_ : null; }
+    public global::TheGame.Protobuf.PlayerJoined PlayerJoined {
+      get { return messageCase_ == MessageOneofCase.PlayerJoined ? (global::TheGame.Protobuf.PlayerJoined) message_ : null; }
       set {
         message_ = value;
         messageCase_ = value == null ? MessageOneofCase.None : MessageOneofCase.PlayerJoined;
@@ -112,8 +111,8 @@ namespace TheGame.Core.Protobuf {
     /// <summary>Field number for the "player_left" field.</summary>
     public const int PlayerLeftFieldNumber = 2;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::TheGame.Core.Protobuf.PlayerLeft PlayerLeft {
-      get { return messageCase_ == MessageOneofCase.PlayerLeft ? (global::TheGame.Core.Protobuf.PlayerLeft) message_ : null; }
+    public global::TheGame.Protobuf.PlayerLeft PlayerLeft {
+      get { return messageCase_ == MessageOneofCase.PlayerLeft ? (global::TheGame.Protobuf.PlayerLeft) message_ : null; }
       set {
         message_ = value;
         messageCase_ = value == null ? MessageOneofCase.None : MessageOneofCase.PlayerLeft;
@@ -123,8 +122,8 @@ namespace TheGame.Core.Protobuf {
     /// <summary>Field number for the "chat" field.</summary>
     public const int ChatFieldNumber = 3;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::TheGame.Core.Protobuf.Chat Chat {
-      get { return messageCase_ == MessageOneofCase.Chat ? (global::TheGame.Core.Protobuf.Chat) message_ : null; }
+    public global::TheGame.Protobuf.Chat Chat {
+      get { return messageCase_ == MessageOneofCase.Chat ? (global::TheGame.Protobuf.Chat) message_ : null; }
       set {
         message_ = value;
         messageCase_ = value == null ? MessageOneofCase.None : MessageOneofCase.Chat;
@@ -234,19 +233,19 @@ namespace TheGame.Core.Protobuf {
       switch (other.MessageCase) {
         case MessageOneofCase.PlayerJoined:
           if (PlayerJoined == null) {
-            PlayerJoined = new global::TheGame.Core.Protobuf.PlayerJoined();
+            PlayerJoined = new global::TheGame.Protobuf.PlayerJoined();
           }
           PlayerJoined.MergeFrom(other.PlayerJoined);
           break;
         case MessageOneofCase.PlayerLeft:
           if (PlayerLeft == null) {
-            PlayerLeft = new global::TheGame.Core.Protobuf.PlayerLeft();
+            PlayerLeft = new global::TheGame.Protobuf.PlayerLeft();
           }
           PlayerLeft.MergeFrom(other.PlayerLeft);
           break;
         case MessageOneofCase.Chat:
           if (Chat == null) {
-            Chat = new global::TheGame.Core.Protobuf.Chat();
+            Chat = new global::TheGame.Protobuf.Chat();
           }
           Chat.MergeFrom(other.Chat);
           break;
@@ -264,7 +263,7 @@ namespace TheGame.Core.Protobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            global::TheGame.Core.Protobuf.PlayerJoined subBuilder = new global::TheGame.Core.Protobuf.PlayerJoined();
+            global::TheGame.Protobuf.PlayerJoined subBuilder = new global::TheGame.Protobuf.PlayerJoined();
             if (messageCase_ == MessageOneofCase.PlayerJoined) {
               subBuilder.MergeFrom(PlayerJoined);
             }
@@ -273,7 +272,7 @@ namespace TheGame.Core.Protobuf {
             break;
           }
           case 18: {
-            global::TheGame.Core.Protobuf.PlayerLeft subBuilder = new global::TheGame.Core.Protobuf.PlayerLeft();
+            global::TheGame.Protobuf.PlayerLeft subBuilder = new global::TheGame.Protobuf.PlayerLeft();
             if (messageCase_ == MessageOneofCase.PlayerLeft) {
               subBuilder.MergeFrom(PlayerLeft);
             }
@@ -282,7 +281,7 @@ namespace TheGame.Core.Protobuf {
             break;
           }
           case 26: {
-            global::TheGame.Core.Protobuf.Chat subBuilder = new global::TheGame.Core.Protobuf.Chat();
+            global::TheGame.Protobuf.Chat subBuilder = new global::TheGame.Protobuf.Chat();
             if (messageCase_ == MessageOneofCase.Chat) {
               subBuilder.MergeFrom(Chat);
             }
@@ -304,7 +303,7 @@ namespace TheGame.Core.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TheGame.Core.Protobuf.MessagesReflection.Descriptor.MessageTypes[1]; }
+      get { return global::TheGame.Protobuf.MessagesReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -433,7 +432,7 @@ namespace TheGame.Core.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TheGame.Core.Protobuf.MessagesReflection.Descriptor.MessageTypes[2]; }
+      get { return global::TheGame.Protobuf.MessagesReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -461,9 +460,9 @@ namespace TheGame.Core.Protobuf {
 
     /// <summary>Field number for the "player" field.</summary>
     public const int PlayerFieldNumber = 1;
-    private global::TheGame.Core.Protobuf.Player player_;
+    private global::TheGame.Protobuf.Player player_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::TheGame.Core.Protobuf.Player Player {
+    public global::TheGame.Protobuf.Player Player {
       get { return player_; }
       set {
         player_ = value;
@@ -532,7 +531,7 @@ namespace TheGame.Core.Protobuf {
       }
       if (other.player_ != null) {
         if (player_ == null) {
-          player_ = new global::TheGame.Core.Protobuf.Player();
+          player_ = new global::TheGame.Protobuf.Player();
         }
         Player.MergeFrom(other.Player);
       }
@@ -549,7 +548,7 @@ namespace TheGame.Core.Protobuf {
             break;
           case 10: {
             if (player_ == null) {
-              player_ = new global::TheGame.Core.Protobuf.Player();
+              player_ = new global::TheGame.Protobuf.Player();
             }
             input.ReadMessage(player_);
             break;
@@ -568,7 +567,7 @@ namespace TheGame.Core.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TheGame.Core.Protobuf.MessagesReflection.Descriptor.MessageTypes[3]; }
+      get { return global::TheGame.Protobuf.MessagesReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -596,9 +595,9 @@ namespace TheGame.Core.Protobuf {
 
     /// <summary>Field number for the "player" field.</summary>
     public const int PlayerFieldNumber = 1;
-    private global::TheGame.Core.Protobuf.Player player_;
+    private global::TheGame.Protobuf.Player player_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::TheGame.Core.Protobuf.Player Player {
+    public global::TheGame.Protobuf.Player Player {
       get { return player_; }
       set {
         player_ = value;
@@ -667,7 +666,7 @@ namespace TheGame.Core.Protobuf {
       }
       if (other.player_ != null) {
         if (player_ == null) {
-          player_ = new global::TheGame.Core.Protobuf.Player();
+          player_ = new global::TheGame.Protobuf.Player();
         }
         Player.MergeFrom(other.Player);
       }
@@ -684,7 +683,7 @@ namespace TheGame.Core.Protobuf {
             break;
           case 10: {
             if (player_ == null) {
-              player_ = new global::TheGame.Core.Protobuf.Player();
+              player_ = new global::TheGame.Protobuf.Player();
             }
             input.ReadMessage(player_);
             break;
@@ -703,7 +702,7 @@ namespace TheGame.Core.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TheGame.Core.Protobuf.MessagesReflection.Descriptor.MessageTypes[4]; }
+      get { return global::TheGame.Protobuf.MessagesReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -732,9 +731,9 @@ namespace TheGame.Core.Protobuf {
 
     /// <summary>Field number for the "player" field.</summary>
     public const int PlayerFieldNumber = 1;
-    private global::TheGame.Core.Protobuf.Player player_;
+    private global::TheGame.Protobuf.Player player_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::TheGame.Core.Protobuf.Player Player {
+    public global::TheGame.Protobuf.Player Player {
       get { return player_; }
       set {
         player_ = value;
@@ -823,7 +822,7 @@ namespace TheGame.Core.Protobuf {
       }
       if (other.player_ != null) {
         if (player_ == null) {
-          player_ = new global::TheGame.Core.Protobuf.Player();
+          player_ = new global::TheGame.Protobuf.Player();
         }
         Player.MergeFrom(other.Player);
       }
@@ -843,7 +842,7 @@ namespace TheGame.Core.Protobuf {
             break;
           case 10: {
             if (player_ == null) {
-              player_ = new global::TheGame.Core.Protobuf.Player();
+              player_ = new global::TheGame.Protobuf.Player();
             }
             input.ReadMessage(player_);
             break;
@@ -866,7 +865,7 @@ namespace TheGame.Core.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TheGame.Core.Protobuf.MessagesReflection.Descriptor.MessageTypes[5]; }
+      get { return global::TheGame.Protobuf.MessagesReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -900,8 +899,8 @@ namespace TheGame.Core.Protobuf {
     /// <summary>Field number for the "send_chat" field.</summary>
     public const int SendChatFieldNumber = 1;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::TheGame.Core.Protobuf.SendChat SendChat {
-      get { return messageCase_ == MessageOneofCase.SendChat ? (global::TheGame.Core.Protobuf.SendChat) message_ : null; }
+    public global::TheGame.Protobuf.SendChat SendChat {
+      get { return messageCase_ == MessageOneofCase.SendChat ? (global::TheGame.Protobuf.SendChat) message_ : null; }
       set {
         message_ = value;
         messageCase_ = value == null ? MessageOneofCase.None : MessageOneofCase.SendChat;
@@ -991,7 +990,7 @@ namespace TheGame.Core.Protobuf {
       switch (other.MessageCase) {
         case MessageOneofCase.SendChat:
           if (SendChat == null) {
-            SendChat = new global::TheGame.Core.Protobuf.SendChat();
+            SendChat = new global::TheGame.Protobuf.SendChat();
           }
           SendChat.MergeFrom(other.SendChat);
           break;
@@ -1009,7 +1008,7 @@ namespace TheGame.Core.Protobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            global::TheGame.Core.Protobuf.SendChat subBuilder = new global::TheGame.Core.Protobuf.SendChat();
+            global::TheGame.Protobuf.SendChat subBuilder = new global::TheGame.Protobuf.SendChat();
             if (messageCase_ == MessageOneofCase.SendChat) {
               subBuilder.MergeFrom(SendChat);
             }
@@ -1031,7 +1030,7 @@ namespace TheGame.Core.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TheGame.Core.Protobuf.MessagesReflection.Descriptor.MessageTypes[6]; }
+      get { return global::TheGame.Protobuf.MessagesReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

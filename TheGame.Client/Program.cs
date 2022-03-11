@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 using TheGame.Client;
 using TheGame.Core;
-using TheGame.Core.Protobuf;
+using TheGame.Protobuf;
 
 var loggerFactory = LoggerFactory.Create(builder =>
 {

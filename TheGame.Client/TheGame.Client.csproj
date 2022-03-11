@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TheGame.Core\TheGame.Core.csproj" />
+    <ProjectReference Include="..\TheGame.Protobuf\TheGame.Protobuf.csproj" />
   </ItemGroup>
 
 </Project>

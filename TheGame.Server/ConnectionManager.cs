@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
 
 using TheGame.Core;
-using TheGame.Core.Protobuf;
+using TheGame.Protobuf;
 
 namespace TheGame.Server;
 

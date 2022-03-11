@@ -1,6 +1,6 @@
 using Google.Protobuf;
 
-using TheGame.Core.Protobuf;
+using TheGame.Protobuf;
 
 namespace TheGame.Client;
 

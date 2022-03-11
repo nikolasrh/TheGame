@@ -1,5 +1,5 @@
 syntax = "proto3";
-package TheGame.Core.Protobuf;
+package TheGame.Protobuf;
 
 message ServerMessage {
   oneof message {
