@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 
 using TheGame.Core;
 using TheGame.Core.Protobuf;
-using TheGame.Server.Serialization;
 
 namespace TheGame.Server;
 

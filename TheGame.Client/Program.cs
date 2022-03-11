@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 using Microsoft.Extensions.Logging;
 
-using TheGame.Client.Serialization;
+using TheGame.Client;
 using TheGame.Core;
 using TheGame.Core.Protobuf;
 

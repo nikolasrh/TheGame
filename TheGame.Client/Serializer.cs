@@ -2,7 +2,7 @@ using Google.Protobuf;
 
 using TheGame.Core.Protobuf;
 
-namespace TheGame.Client.Serialization;
+namespace TheGame.Client;
 
 public static class Serializer
 {
