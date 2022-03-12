@@ -17,7 +17,7 @@ public class Server
     public Server(IPAddress ip, int port, IServerCallbacks serverCallbacks, ILogger<Server> logger)
     {
         _listener = new TcpListener(ip, port);
-        _connectionCallbacks = new ConnectionCallbacks(this, serverCallbacks);
+        _connectionCallbacks = new ServerConnectionCallbacks(this, serverCallbacks);
         _serverCallbacks = serverCallbacks;
         _logger = logger;
     }

@@ -7,8 +7,6 @@ using TheGame.Client;
 using TheGame.Network;
 using TheGame.Protobuf;
 
-using ConnectionCallbacks = TheGame.Client.ConnectionCallbacks;
-
 var loggerFactory = LoggerFactory.Create(builder =>
 {
     builder.AddConsole();

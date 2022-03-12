@@ -1,11 +1,11 @@
 namespace TheGame.Network;
 
-public class ConnectionCallbacks : IConnectionCallbacks
+public class ServerConnectionCallbacks : IConnectionCallbacks
 {
     private readonly Server _server;
     private readonly IServerCallbacks _serverCallbacks;
 
-    public ConnectionCallbacks(Server server, IServerCallbacks serverCallbacks)
+    public ServerConnectionCallbacks(Server server, IServerCallbacks serverCallbacks)
     {
         _server = server;
         _serverCallbacks = serverCallbacks;
