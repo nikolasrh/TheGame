@@ -4,19 +4,17 @@ using System.Net.Sockets;
 
 using Microsoft.Extensions.Logging;
 
-using TheGame.Core;
-
-namespace TheGame.Server;
+namespace TheGame.Core;
 
 public class ConnectionManager
 {
     private readonly TcpListener _listener;
     private readonly ConcurrentDictionary<Guid, Connection> _connections = new();
-    private readonly ConnectionCallbacks _connectionCallbacks;
-    private readonly ConnectionManagerCallbacks _connectionManagerCallbacks;
+    private readonly IConnectionCallbacks _connectionCallbacks;
+    private readonly IConnectionManagerCallbacks _connectionManagerCallbacks;
     private readonly ILogger<ConnectionManager> _logger;
 
-    public ConnectionManager(IPAddress ip, int port, ConnectionManagerCallbacks connectionManagerCallbacks, ILogger<ConnectionManager> logger)
+    public ConnectionManager(IPAddress ip, int port, IConnectionManagerCallbacks connectionManagerCallbacks, ILogger<ConnectionManager> logger)
     {
         _listener = new TcpListener(ip, port);
         _connectionCallbacks = new ConnectionCallbacks(this, connectionManagerCallbacks);

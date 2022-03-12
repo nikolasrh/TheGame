@@ -1,13 +1,11 @@
-using TheGame.Core;
-
-namespace TheGame.Server;
+namespace TheGame.Core;
 
 public class ConnectionCallbacks : IConnectionCallbacks
 {
     private readonly ConnectionManager _connectionManager;
-    private readonly ConnectionManagerCallbacks _connectionManagerCallbacks;
+    private readonly IConnectionManagerCallbacks _connectionManagerCallbacks;
 
-    public ConnectionCallbacks(ConnectionManager connectionManager, ConnectionManagerCallbacks connectionManagerCallbacks)
+    public ConnectionCallbacks(ConnectionManager connectionManager, IConnectionManagerCallbacks connectionManagerCallbacks)
     {
         _connectionManager = connectionManager;
         _connectionManagerCallbacks = connectionManagerCallbacks;
