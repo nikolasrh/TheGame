@@ -20,9 +20,9 @@ var connectionCallbacks = new ConnectionCallbacks(loggerFactory.CreateLogger<Con
 
 var connection = new Connection(client, connectionCallbacks, loggerFactory.CreateLogger<Connection>());
 
-var _ = connection.Start();
+var task = connection.Start();
 
-while (true)
+while (!connection.Disconnected)
 {
     var message = Console.ReadLine() ?? string.Empty;
 

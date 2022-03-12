@@ -13,7 +13,7 @@ public class ServerConnectionCallbacks : IConnectionCallbacks
 
     public Task OnDisconnect(Connection connection)
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
     public Task OnRead(byte[] data, Connection connection)
