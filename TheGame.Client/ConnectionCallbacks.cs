@@ -14,6 +14,11 @@ public class ConnectionCallbacks : IConnectionCallbacks
         _logger = logger;
     }
 
+    public Task OnDisconnect(Connection connection)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task OnRead(byte[] data, Connection connection)
     {
         var serverMessage = Serializer.Deserialize(data);

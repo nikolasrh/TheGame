@@ -11,6 +11,11 @@ public class ServerConnectionCallbacks : IConnectionCallbacks
         _serverCallbacks = serverCallbacks;
     }
 
+    public Task OnDisconnect(Connection connection)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task OnRead(byte[] data, Connection connection)
     {
         return _serverCallbacks.OnRead(data, connection, _server);
