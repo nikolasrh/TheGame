@@ -6,19 +6,19 @@ using Microsoft.Extensions.Logging;
 
 namespace TheGame.Network;
 
-public class ConnectionManager
+public class Server
 {
     private readonly TcpListener _listener;
     private readonly ConcurrentDictionary<Guid, Connection> _connections = new();
     private readonly IConnectionCallbacks _connectionCallbacks;
-    private readonly IConnectionManagerCallbacks _connectionManagerCallbacks;
-    private readonly ILogger<ConnectionManager> _logger;
+    private readonly IServerCallbacks _serverCallbacks;
+    private readonly ILogger<Server> _logger;
 
-    public ConnectionManager(IPAddress ip, int port, IConnectionManagerCallbacks connectionManagerCallbacks, ILogger<ConnectionManager> logger)
+    public Server(IPAddress ip, int port, IServerCallbacks serverCallbacks, ILogger<Server> logger)
     {
         _listener = new TcpListener(ip, port);
-        _connectionCallbacks = new ConnectionCallbacks(this, connectionManagerCallbacks);
-        _connectionManagerCallbacks = connectionManagerCallbacks;
+        _connectionCallbacks = new ConnectionCallbacks(this, serverCallbacks);
+        _serverCallbacks = serverCallbacks;
         _logger = logger;
     }
 
@@ -55,7 +55,7 @@ public class ConnectionManager
 
     private async Task HandleNewConnection(Connection connection)
     {
-        await _connectionManagerCallbacks.OnConnection(connection, this);
+        await _serverCallbacks.OnConnection(connection, this);
 
         if (!_connections.TryAdd(connection.Id, connection))
         {

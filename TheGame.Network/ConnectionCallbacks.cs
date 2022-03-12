@@ -2,17 +2,17 @@ namespace TheGame.Network;
 
 public class ConnectionCallbacks : IConnectionCallbacks
 {
-    private readonly ConnectionManager _connectionManager;
-    private readonly IConnectionManagerCallbacks _connectionManagerCallbacks;
+    private readonly Server _server;
+    private readonly IServerCallbacks _serverCallbacks;
 
-    public ConnectionCallbacks(ConnectionManager connectionManager, IConnectionManagerCallbacks connectionManagerCallbacks)
+    public ConnectionCallbacks(Server server, IServerCallbacks serverCallbacks)
     {
-        _connectionManager = connectionManager;
-        _connectionManagerCallbacks = connectionManagerCallbacks;
+        _server = server;
+        _serverCallbacks = serverCallbacks;
     }
 
     public Task OnRead(byte[] data, Connection connection)
     {
-        return _connectionManagerCallbacks.OnRead(data, connection, _connectionManager);
+        return _serverCallbacks.OnRead(data, connection, _server);
     }
 }

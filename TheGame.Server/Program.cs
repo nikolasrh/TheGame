@@ -13,8 +13,8 @@ var loggerFactory = LoggerFactory.Create(builder =>
     builder.AddConsole();
 });
 
-var connectionManagerCallbacks = new ConnectionManagerCallbacks(loggerFactory.CreateLogger<ConnectionManagerCallbacks>());
+var serverCallbacks = new ServerCallbacks(loggerFactory.CreateLogger<ServerCallbacks>());
 
-var connectionManager = new ConnectionManager(IPAddress.Any, 6000, connectionManagerCallbacks, loggerFactory.CreateLogger<ConnectionManager>());
+var server = new Server(IPAddress.Any, 6000, serverCallbacks, loggerFactory.CreateLogger<Server>());
 
-await connectionManager.Start(cancellationToken);
+await server.Start(cancellationToken);

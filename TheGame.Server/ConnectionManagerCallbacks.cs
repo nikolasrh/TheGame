@@ -5,16 +5,16 @@ using TheGame.Protobuf;
 
 namespace TheGame.Server;
 
-public class ConnectionManagerCallbacks : IConnectionManagerCallbacks
+public class ServerCallbacks : IServerCallbacks
 {
-    private readonly ILogger<ConnectionManagerCallbacks> _logger;
+    private readonly ILogger<ServerCallbacks> _logger;
 
-    public ConnectionManagerCallbacks(ILogger<ConnectionManagerCallbacks> logger)
+    public ServerCallbacks(ILogger<ServerCallbacks> logger)
     {
         _logger = logger;
     }
 
-    public async Task OnConnection(Connection newConnection, ConnectionManager connectionManager)
+    public async Task OnConnection(Connection newConnection, Network.Server server)
     {
         var playerId = newConnection.Id.ToString();
         var serverMessage = Serializer.Serialize(new ServerMessage
@@ -28,16 +28,16 @@ public class ConnectionManagerCallbacks : IConnectionManagerCallbacks
             }
         });
 
-        var tasks = connectionManager.WriteAll(serverMessage);
+        var tasks = server.WriteAll(serverMessage);
         await Task.WhenAll(tasks);
     }
 
-    public Task OnDisconnect(ConnectionManager connectionManager)
+    public Task OnDisconnect(Network.Server server)
     {
         throw new NotImplementedException();
     }
 
-    public async Task OnRead(byte[] data, Connection connection, ConnectionManager connectionManager)
+    public async Task OnRead(byte[] data, Connection connection, Network.Server server)
     {
         var clientMessage = Serializer.Deserialize(data);
 
@@ -59,7 +59,7 @@ public class ConnectionManagerCallbacks : IConnectionManagerCallbacks
                     }
                 });
 
-                var tasks = connectionManager.WriteAll(serverMessage);
+                var tasks = server.WriteAll(serverMessage);
                 await Task.WhenAll(tasks);
                 break;
         }
