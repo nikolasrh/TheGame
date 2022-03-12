@@ -10,20 +10,20 @@ public class Connection
     private readonly Pipe _outgoing = new();
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly CancellationToken _cancellationToken;
-    private readonly TcpClient _client;
+    private readonly TcpClient _tcpClient;
     private readonly IConnectionCallbacks _connectionCallbacks;
     private readonly ILogger _logger;
     private readonly NetworkStream _networkStream;
 
-    public Connection(TcpClient client, IConnectionCallbacks connectionCallbacks, ILogger logger)
+    public Connection(TcpClient tcpClient, IConnectionCallbacks connectionCallbacks, ILogger logger)
     {
-        client.SendTimeout = 5000;
-        client.NoDelay = true;
+        tcpClient.SendTimeout = 5000;
+        tcpClient.NoDelay = true;
         _cancellationToken = _cancellationTokenSource.Token;
-        _client = client;
+        _tcpClient = tcpClient;
         _connectionCallbacks = connectionCallbacks;
         _logger = logger;
-        _networkStream = client.GetStream();
+        _networkStream = tcpClient.GetStream();
     }
 
     public Guid Id { get; } = Guid.NewGuid();
@@ -129,7 +129,7 @@ public class Connection
 
         try
         {
-            _client.Close();
+            _tcpClient.Close();
         }
         catch (Exception e)
         {
