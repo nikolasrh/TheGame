@@ -28,13 +28,24 @@ public class ServerCallbacks : IServerCallbacks
             }
         });
 
-        var tasks = server.WriteAll(serverMessage);
-        await Task.WhenAll(tasks);
+        await server.WriteAll(serverMessage);
     }
 
-    public Task OnDisconnect(Network.Server server)
+    public async Task OnDisconnect(Connection connection, Network.Server server)
     {
-        throw new NotImplementedException();
+        var playerId = connection.Id.ToString();
+        var serverMessage = Serializer.Serialize(new ServerMessage
+        {
+            PlayerLeft = new PlayerLeft
+            {
+                Player = new Player
+                {
+                    Id = playerId
+                }
+            }
+        });
+
+        await server.WriteAll(serverMessage);
     }
 
     public async Task OnRead(byte[] data, Connection connection, Network.Server server)
@@ -59,8 +70,7 @@ public class ServerCallbacks : IServerCallbacks
                     }
                 });
 
-                var tasks = server.WriteAll(serverMessage);
-                await Task.WhenAll(tasks);
+                await server.WriteAll(serverMessage);
                 break;
         }
     }

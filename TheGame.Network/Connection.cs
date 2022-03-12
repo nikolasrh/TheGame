@@ -48,7 +48,7 @@ public class Connection
         catch (Exception e)
         {
             _logger.LogError(e, "Error when writing to pipe");
-            Stop();
+            await Stop();
         }
     }
 
@@ -73,7 +73,7 @@ public class Connection
         catch (Exception e)
         {
             _logger.LogError(e, "Error when writing to network stream");
-            Stop();
+            await Stop();
         }
     }
 
@@ -104,11 +104,11 @@ public class Connection
         catch (Exception e)
         {
             _logger.LogError(e, "Error when reading from network stream");
-            Stop();
+            await Stop();
         }
     }
 
-    public void Stop()
+    public async Task Stop()
     {
         if (Disconnected) return;
 
@@ -136,6 +136,6 @@ public class Connection
             _logger.LogError(e, "Error when closing tcp client");
         }
 
-        _connectionCallbacks.OnDisconnect(this);
+        await _connectionCallbacks.OnDisconnect(this);
     }
 }

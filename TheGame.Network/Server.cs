@@ -50,18 +50,31 @@ public class Server
     public async Task WriteAll(byte[] data)
     {
         var tasks = _connections.Select(connection => connection.Value.Write(data));
+
+        _logger.LogInformation("Wrote to {0} connections", tasks.Count());
+
         await Task.WhenAll(tasks);
+    }
+
+    public void Disconnect(Connection connection)
+    {
+        if (!_connections.Remove(connection.Id, out _))
+        {
+            _logger.LogError("Could not remove connection {0} from dictionary", connection.Id);
+        }
     }
 
     private async Task HandleNewConnection(Connection connection)
     {
         await _serverCallbacks.OnConnection(connection, this);
 
-        if (!_connections.TryAdd(connection.Id, connection))
+        if (_connections.TryAdd(connection.Id, connection))
         {
-            // TODO: End connection
+            await connection.Start();
         }
-
-        await connection.Start();
+        else
+        {
+            await connection.Stop();
+        }
     }
 }
