@@ -9,17 +9,32 @@ public class Connection
 {
     public Guid Id { get; } = Guid.NewGuid();
     private readonly Pipe _outgoing = new Pipe();
-    private readonly ILogger _logger;
     private readonly TcpClient _client;
+    private readonly IConnectionCallbacks _connectionCallbacks;
+    private readonly ILogger _logger;
 
-    public Connection(TcpClient client, ILogger logger)
+    public Connection(TcpClient client, IConnectionCallbacks connectionCallbacks, ILogger logger)
     {
         client.NoDelay = true;
         _client = client;
+        _connectionCallbacks = connectionCallbacks;
         _logger = logger;
     }
 
-    public async Task StartWriting()
+    public async Task Start()
+    {
+        await Task.WhenAll(StartReading(), StartWriting());
+    }
+
+    public async Task Write(byte[] bytes)
+    {
+        var prefix = BitConverter.GetBytes(bytes.Length);
+        var bytesWithPrefix = prefix.Concat(bytes).ToArray();
+
+        await _outgoing.Writer.WriteAsync(bytesWithPrefix);
+    }
+
+    private async Task StartWriting()
     {
         var reader = _outgoing.Reader;
         var networkStream = _client.GetStream();
@@ -37,8 +52,7 @@ public class Connection
         }
     }
 
-    // TODO: Consider changing onRead to EventHandler
-    public async Task StartReading(Func<Connection, byte[], Task> onRead)
+    private async Task StartReading()
     {
         // TODO: Consider using pipe for incoming data.
         // Buffer memory can be reused across incoming messages.
@@ -54,15 +68,7 @@ public class Connection
 
             await networkStream.ReadAsync(buffer, 0, length);
 
-            await onRead(this, buffer);
+            await _connectionCallbacks.OnRead(buffer, this);
         }
-    }
-
-    public async Task Write(byte[] bytes)
-    {
-        var prefix = BitConverter.GetBytes(bytes.Length);
-        var bytesWithPrefix = prefix.Concat(bytes).ToArray();
-
-        await _outgoing.Writer.WriteAsync(bytesWithPrefix);
     }
 }

@@ -5,7 +5,6 @@ using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
 
 using TheGame.Core;
-using TheGame.Protobuf;
 
 namespace TheGame.Server;
 
@@ -13,15 +12,19 @@ public class ConnectionManager
 {
     private readonly TcpListener _listener;
     private readonly ConcurrentDictionary<Guid, Connection> _connections = new();
+    private readonly ConnectionCallbacks _connectionCallbacks;
+    private readonly ConnectionManagerCallbacks _connectionManagerCallbacks;
     private readonly ILogger<ConnectionManager> _logger;
 
-    public ConnectionManager(IPAddress ip, int port, ILogger<ConnectionManager> logger)
+    public ConnectionManager(IPAddress ip, int port, ConnectionManagerCallbacks connectionManagerCallbacks, ILogger<ConnectionManager> logger)
     {
         _listener = new TcpListener(ip, port);
+        _connectionCallbacks = new ConnectionCallbacks(this, connectionManagerCallbacks);
+        _connectionManagerCallbacks = connectionManagerCallbacks;
         _logger = logger;
     }
 
-    public async Task Run(CancellationToken cancellationToken)
+    public async Task Start(CancellationToken cancellationToken)
     {
         _listener.Start();
 
@@ -32,7 +35,7 @@ public class ConnectionManager
                 _logger.LogInformation("Waiting for connection...");
                 var client = await _listener.AcceptTcpClientAsync(cancellationToken);
 
-                var connection = new Connection(client, _logger);
+                var connection = new Connection(client, _connectionCallbacks, _logger);
 
                 // TODO: Decide if Task.Run is a good solution
                 var _ = Task.Run(() => HandleNewConnection(connection));
@@ -46,63 +49,21 @@ public class ConnectionManager
         }
     }
 
-    // TODO: Change to EventHandler
-    private static async Task OnNewConnection(Connection newConnection, ConcurrentDictionary<Guid, Connection> existingConnections)
+    public async Task WriteAll(byte[] data)
     {
-        var playerId = newConnection.Id.ToString();
-        var serverMessage = Serializer.Serialize(new ServerMessage
-        {
-            PlayerJoined = new PlayerJoined
-            {
-                Player = new Player
-                {
-                    Id = playerId
-                }
-            }
-        });
-
-        var tasks = existingConnections.Select(connection => connection.Value.Write(serverMessage));
+        var tasks = _connections.Select(connection => connection.Value.Write(data));
         await Task.WhenAll(tasks);
-    }
-
-    // TODO: Change to EventHandler
-    private async Task OnRead(Connection connection, byte[] data)
-    {
-        var clientMessage = Serializer.Deserialize(data);
-
-        switch (clientMessage.MessageCase)
-        {
-            case ClientMessage.MessageOneofCase.SendChat:
-                _logger.LogInformation("Received chat message: {0}", clientMessage.SendChat.Text);
-                var playerId = connection.Id.ToString();
-
-                var serverMessage = Serializer.Serialize(new ServerMessage
-                {
-                    Chat = new Chat
-                    {
-                        Player = new Player
-                        {
-                            Id = playerId
-                        },
-                        Text = clientMessage.SendChat.Text
-                    }
-                });
-
-                var tasks = _connections.Select(connection => connection.Value.Write(serverMessage));
-                await Task.WhenAll(tasks);
-                break;
-        }
     }
 
     private async Task HandleNewConnection(Connection connection)
     {
-        await OnNewConnection(connection, _connections);
+        await _connectionManagerCallbacks.OnConnection(connection, this);
 
         if (!_connections.TryAdd(connection.Id, connection))
         {
             // TODO: End connection
         }
 
-        await Task.WhenAll(connection.StartWriting(), connection.StartReading(OnRead));
+        await connection.Start();
     }
 }

@@ -2,7 +2,6 @@
 
 using Microsoft.Extensions.Logging;
 
-using TheGame.Core;
 using TheGame.Server;
 
 var cancellationTokenSource = new CancellationTokenSource();
@@ -13,15 +12,8 @@ var loggerFactory = LoggerFactory.Create(builder =>
     builder.AddConsole();
 });
 
-var connectionManager = new ConnectionManager(IPAddress.Any, 6000, loggerFactory.CreateLogger<ConnectionManager>());
+var connectionManagerCallbacks = new ConnectionManagerCallbacks(loggerFactory.CreateLogger<ConnectionManagerCallbacks>());
 
-var connectionManagerRunTask = connectionManager.Run(cancellationToken);
+var connectionManager = new ConnectionManager(IPAddress.Any, 6000, connectionManagerCallbacks, loggerFactory.CreateLogger<ConnectionManager>());
 
-var gameLoopOptions = new GameLoopOptions(tickRate: 1);
-var logger = loggerFactory.CreateLogger<GameLoop>();
-
-var gameLoop = new GameLoop(gameLoopOptions, logger);
-
-var gameLoopTask = gameLoop.Run((TimeSpan delta) => { });
-
-Task.WaitAny(connectionManagerRunTask, gameLoopTask);
+await connectionManager.Start(cancellationToken);
