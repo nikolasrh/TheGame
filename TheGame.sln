@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Server", "TheGame.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Client", "TheGame.Client\TheGame.Client.csproj", "{AB4BC6A5-8BFA-44D0-BE4B-DB52D48D3A3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Core", "TheGame.Core\TheGame.Core.csproj", "{EF4D96E0-9D9B-4CBB-8897-E1892E8EEC7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Network", "TheGame.Network\TheGame.Network.csproj", "{EF4D96E0-9D9B-4CBB-8897-E1892E8EEC7A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Protobuf", "TheGame.Protobuf\TheGame.Protobuf.csproj", "{692EE71C-7681-4D78-9E8F-13F175D127C1}"
 EndProject

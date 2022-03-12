@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
 
 using TheGame.Client;
-using TheGame.Core;
+using TheGame.Network;
 using TheGame.Protobuf;
 
 using ConnectionCallbacks = TheGame.Client.ConnectionCallbacks;

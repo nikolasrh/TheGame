@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-using TheGame.Core;
+using TheGame.Network;
 using TheGame.Protobuf;
 
 namespace TheGame.Client;

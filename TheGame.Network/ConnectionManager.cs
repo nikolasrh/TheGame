@@ -4,7 +4,7 @@ using System.Net.Sockets;
 
 using Microsoft.Extensions.Logging;
 
-namespace TheGame.Core;
+namespace TheGame.Network;
 
 public class ConnectionManager
 {

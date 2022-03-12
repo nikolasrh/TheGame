@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\TheGame.Core\TheGame.Core.csproj" />
+    <ProjectReference Include="..\TheGame.Network\TheGame.Network.csproj" />
     <ProjectReference Include="..\TheGame.Protobuf\TheGame.Protobuf.csproj" />
   </ItemGroup>
 

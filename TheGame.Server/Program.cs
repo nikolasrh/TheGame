@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.Logging;
 
-using TheGame.Core;
+using TheGame.Network;
 using TheGame.Server;
 
 var cancellationTokenSource = new CancellationTokenSource();

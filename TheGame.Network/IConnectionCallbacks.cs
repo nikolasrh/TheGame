@@ -1,4 +1,4 @@
-namespace TheGame.Core;
+namespace TheGame.Network;
 
 public interface IConnectionCallbacks
 {

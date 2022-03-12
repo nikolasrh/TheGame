@@ -1,6 +1,6 @@
-using TheGame.Core;
+using TheGame.Network;
 
-namespace TheGame.Core;
+namespace TheGame.Network;
 
 public interface IConnectionManagerCallbacks
 {
