@@ -3,18 +3,18 @@ using Microsoft.Extensions.Logging;
 using TheGame.Network;
 using TheGame.Protobuf;
 
-namespace TheGame.Server;
+namespace TheGame.DedicatedServer;
 
-public class ServerCallbacks : IServerCallbacks
+public class DedicatedServerCallbacks : IServerCallbacks
 {
-    private readonly ILogger<ServerCallbacks> _logger;
+    private readonly ILogger<DedicatedServerCallbacks> _logger;
 
-    public ServerCallbacks(ILogger<ServerCallbacks> logger)
+    public DedicatedServerCallbacks(ILogger<DedicatedServerCallbacks> logger)
     {
         _logger = logger;
     }
 
-    public async Task OnConnection(Connection newConnection, Network.Server server)
+    public async Task OnConnection(Connection newConnection, Server server)
     {
         var playerId = newConnection.Id.ToString();
         var serverMessage = Serializer.Serialize(new ServerMessage
@@ -31,7 +31,7 @@ public class ServerCallbacks : IServerCallbacks
         await server.WriteAll(serverMessage);
     }
 
-    public async Task OnDisconnect(Connection connection, Network.Server server)
+    public async Task OnDisconnect(Connection connection, Server server)
     {
         var playerId = connection.Id.ToString();
         var serverMessage = Serializer.Serialize(new ServerMessage
@@ -48,7 +48,7 @@ public class ServerCallbacks : IServerCallbacks
         await server.WriteAll(serverMessage);
     }
 
-    public async Task OnRead(byte[] data, Connection connection, Network.Server server)
+    public async Task OnRead(byte[] data, Connection connection, Server server)
     {
         var clientMessage = Serializer.Deserialize(data);
 
