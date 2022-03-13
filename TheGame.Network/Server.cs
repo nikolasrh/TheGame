@@ -22,7 +22,7 @@ public class Server
         _logger = logger;
     }
 
-    public async Task Start(CancellationToken cancellationToken)
+    public async Task Start()
     {
         _listener.Start();
 
@@ -31,7 +31,7 @@ public class Server
             while (true)
             {
                 _logger.LogInformation("Waiting for connection...");
-                var client = await _listener.AcceptTcpClientAsync(cancellationToken);
+                var client = await _listener.AcceptTcpClientAsync();
 
                 var connection = new Connection(client, _connectionCallbacks, _logger);
 
