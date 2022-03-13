@@ -15,9 +15,9 @@
       "request": "launch",
       //"preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/TheGame.Client/bin/Debug/net6.0/TheGame.Client.dll",
+      "program": "${workspaceFolder}/src/TheGame.Client/bin/Debug/net6.0/TheGame.Client.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/TheGame.Client",
+      "cwd": "${workspaceFolder}/src/TheGame.Client",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
       "console": "internalConsole",
       "stopAtEntry": false
@@ -31,9 +31,9 @@
       "request": "launch",
       //"preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/TheGame.DedicatedServer/bin/Debug/net6.0/TheGame.DedicatedServer.dll",
+      "program": "${workspaceFolder}/src/TheGame.DedicatedServer/bin/Debug/net6.0/TheGame.DedicatedServer.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/TheGame.DedicatedServer",
+      "cwd": "${workspaceFolder}/src/TheGame.DedicatedServer",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
       "console": "internalConsole",
       "stopAtEntry": false
