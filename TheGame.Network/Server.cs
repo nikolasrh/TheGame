@@ -49,9 +49,9 @@ public class Server
 
     public async Task WriteAll(byte[] data)
     {
-        var tasks = _connections.Select(connection => connection.Value.Write(data));
+        var tasks = _connections.Select(connection => connection.Value.Write(data)).ToArray();
 
-        _logger.LogInformation("Wrote to {0} connections", tasks.Count());
+        _logger.LogInformation("Wrote to {0} connections", tasks.Length);
 
         await Task.WhenAll(tasks);
     }
