@@ -2,8 +2,9 @@
 
 using Microsoft.Extensions.Logging;
 
-using TheGame.Network;
+using TheGame.Core;
 using TheGame.DedicatedServer;
+using TheGame.Network;
 
 var cancellationTokenSource = new CancellationTokenSource();
 var cancellationToken = cancellationTokenSource.Token;
@@ -13,7 +14,9 @@ var loggerFactory = LoggerFactory.Create(builder =>
     builder.AddConsole();
 });
 
-var serverCallbacks = new DedicatedServerCallbacks(loggerFactory.CreateLogger<DedicatedServerCallbacks>());
+var playerGameState = new PlayerGameState();
+
+var serverCallbacks = new DedicatedServerCallbacks(playerGameState, loggerFactory.CreateLogger<DedicatedServerCallbacks>());
 
 var server = new Server(IPAddress.Any, 6000, serverCallbacks, loggerFactory.CreateLogger<Server>());
 

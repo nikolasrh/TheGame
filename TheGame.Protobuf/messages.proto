@@ -6,11 +6,14 @@ message ServerMessage {
     PlayerJoined player_joined = 1;
     PlayerLeft player_left = 2;
     Chat chat = 3;
+    PlayerPosition player_position = 4;
+    GameState game_state = 5;
   }
 }
 
 message Player {
   string id = 1;
+  string name = 2;
 }
 
 message PlayerJoined {
@@ -26,12 +29,32 @@ message Chat {
   string text = 2;
 }
 
+message PlayerPosition {
+  Player player = 1;
+  Position position = 2;
+}
+
+message GameState {
+  repeated PlayerPosition player_positions = 1;
+}
+
 message ClientMessage {
   oneof message {
     SendChat send_chat = 1;
+    Position position = 2;
+    JoinGame join_game = 3;
   }
+}
+
+message Position {
+  float x = 1;
+  float y = 2;
 }
 
 message SendChat {
   string text = 1;
+}
+
+message JoinGame {
+  Player player = 1;
 }

@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TheGame.Network\TheGame.Network.csproj" />
     <ProjectReference Include="..\TheGame.Protobuf\TheGame.Protobuf.csproj" />
+    <ProjectReference Include="..\TheGame.Core\TheGame.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

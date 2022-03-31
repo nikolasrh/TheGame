@@ -24,7 +24,14 @@
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TheGame.Network\TheGame.Network.csproj" />
+    <ProjectReference Include="..\TheGame.Protobuf\TheGame.Protobuf.csproj" />
+    <ProjectReference Include="..\TheGame.Core\TheGame.Core.csproj" />
   </ItemGroup>
 </Project>

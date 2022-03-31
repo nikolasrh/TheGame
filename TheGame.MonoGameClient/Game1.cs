@@ -4,19 +4,27 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using TheGame.Core;
+using TheGame.Network;
+
 namespace TheGame.MonoGameClient
 {
     public class Game1 : Game
     {
+        private readonly Guid _playerId;
+        private readonly PlayerGameState _playerGameState;
+        private readonly Connection _connection;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Texture2D _playerTexture;
         private Vector2 _playerTextureScale;
-        private Vector2 _playerPosition;
         private double _playerSpeed;
 
-        public Game1()
+        public Game1(Guid playerId, PlayerGameState playerGameState, Connection connection)
         {
+            _playerId = playerId;
+            _playerGameState = playerGameState;
+            _connection = connection;
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -35,7 +43,6 @@ namespace TheGame.MonoGameClient
 
             _playerTexture = Content.Load<Texture2D>("player");
             _playerTextureScale = new Vector2(0.2f, 0.2f);
-            _playerPosition = Vector2.Zero;
             _playerSpeed = 100;
 
             // TODO: use this.Content to load your game content here
@@ -46,12 +53,18 @@ namespace TheGame.MonoGameClient
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _playerPosition += GetPlayerPositionChange(gameTime.ElapsedGameTime);
+            var playerPositionChange = GetPlayerPositionChange(gameTime.ElapsedGameTime);
+
+            var player = _playerGameState.GetPlayer(_playerId);
+            player.PositionX += playerPositionChange.X;
+            player.PositionY += playerPositionChange.Y;
 
             // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
+
+        private TimeSpan _nextPlayerPosiotionUpdate = TimeSpan.Zero;
 
         private Vector2 GetPlayerPositionChange(TimeSpan elapsedGameTime)
         {
@@ -83,9 +96,21 @@ namespace TheGame.MonoGameClient
 
             _spriteBatch.Begin();
 
+            foreach (var player in _playerGameState.Players)
+            {
+                DrawPlayer(player);
+            }
+
+            _spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+
+        public void DrawPlayer(Player player)
+        {
             _spriteBatch.Draw(
                 texture: _playerTexture,
-                position: _playerPosition,
+                position: new Vector2(player.PositionX, player.PositionY),
                 sourceRectangle: null,
                 color: Color.Black,
                 rotation: 0f,
@@ -93,10 +118,6 @@ namespace TheGame.MonoGameClient
                 scale: _playerTextureScale,
                 effects: SpriteEffects.None,
                 layerDepth: 0f);
-
-            _spriteBatch.End();
-
-            base.Draw(gameTime);
         }
     }
 }

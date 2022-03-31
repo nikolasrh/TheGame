@@ -47,9 +47,23 @@ public class Server
         }
     }
 
-    public async Task WriteAll(byte[] data)
+    public Task WriteToAllConnections(byte[] data)
     {
-        var tasks = _connections.Select(connection => connection.Value.Write(data)).ToArray();
+        return WriteToConnections(data, _connection => true);
+    }
+
+    public Task WriteToConnections(byte[] data, Guid sender)
+    {
+        return WriteToConnections(data, connection => connection.Id != sender);
+    }
+
+    public async Task WriteToConnections(byte[] data, Func<Connection, bool> predicate)
+    {
+        var tasks = _connections
+            .Select(connection => connection.Value)
+            .Where(predicate)
+            .Select(connection => connection.Write(data))
+            .ToArray();
 
         _logger.LogInformation("Wrote to {0} connections", tasks.Length);
 
