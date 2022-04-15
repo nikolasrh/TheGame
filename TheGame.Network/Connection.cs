@@ -31,7 +31,7 @@ public class Connection
 
     public async Task Start()
     {
-        await Task.WhenAll(StartReading(), StartWriting());
+        await StartWriting();
     }
 
     public async Task Write(byte[] bytes)
@@ -48,7 +48,7 @@ public class Connection
         catch (Exception e)
         {
             _logger.LogError(e, "Error when writing to pipe");
-            await Stop();
+            Stop();
         }
     }
 
@@ -58,7 +58,7 @@ public class Connection
         {
             var reader = _outgoing.Reader;
 
-            while (true)
+            while (!Disconnected)
             {
                 var result = await reader.ReadAsync(_cancellationToken);
 
@@ -73,20 +73,17 @@ public class Connection
         catch (Exception e)
         {
             _logger.LogError(e, "Error when writing to network stream");
-            await Stop();
+            Stop();
         }
     }
 
-    private async Task StartReading()
+    public async Task<byte[]?> Read()
     {
         try
         {
-            // TODO: Consider using pipe for incoming data.
-            // Buffer memory can be reused across incoming messages.
-            var prefixBuffer = new byte[4];
-
-            while (true)
+            while (!Disconnected)
             {
+                var prefixBuffer = new byte[4];
                 var totalBytesReadToPrefixBuffer = await _networkStream.ReadAsync(prefixBuffer, 0, prefixBuffer.Length, _cancellationToken);
 
                 if (totalBytesReadToPrefixBuffer == 0) continue;
@@ -98,23 +95,23 @@ public class Connection
 
                 if (totalBytesReadToBuffer == 0) continue;
 
-                await _connectionCallbacks.OnRead(buffer, this);
+                return buffer;
             }
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error when reading from network stream");
-            await Stop();
+            Stop();
         }
+
+        return null;
     }
 
-    public async Task Stop()
+    public void Stop()
     {
         if (Disconnected) return;
 
         Disconnected = true;
-
-        _logger.LogInformation("Disconnecting");
 
         _cancellationTokenSource.Cancel();
 
@@ -136,6 +133,6 @@ public class Connection
             _logger.LogError(e, "Error when closing tcp client");
         }
 
-        await _connectionCallbacks.OnDisconnect(this);
+        _connectionCallbacks.OnDisconnect(this);
     }
 }

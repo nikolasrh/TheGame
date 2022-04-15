@@ -5,37 +5,20 @@ using Microsoft.Extensions.Logging;
 
 using TheGame.Client;
 using TheGame.Network;
-using TheGame.Protobuf;
 
 var loggerFactory = LoggerFactory.Create(builder =>
 {
     builder.AddConsole();
 });
-var logger = loggerFactory.CreateLogger<Program>();
 
 var client = new TcpClient();
 await client.ConnectAsync(new IPEndPoint(IPAddress.Loopback, 6000));
 
 var connectionCallbacks = new ConnectionCallbacks(loggerFactory.CreateLogger<ConnectionCallbacks>());
-
 var connection = new Connection(client, connectionCallbacks, loggerFactory.CreateLogger<Connection>());
 
-var task = connection.Start();
-
-while (!connection.Disconnected)
-{
-    var message = Console.ReadLine() ?? string.Empty;
-
-    var serializedClientMessage = Serializer.Serialize(new ClientMessage
-    {
-        SendChat = new SendChat
-        {
-            Text = message
-        }
-    });
-
-    await connection.Write(serializedClientMessage);
-}
+var game = new Game(connection, loggerFactory.CreateLogger<Game>());
+await game.Run();
 
 // var gameLoopOptions = new GameLoopOptions(tickRate: 1);
 // var gameLoop = new GameLoop(gameLoopOptions, loggerFactory.CreateLogger<GameLoop>());
