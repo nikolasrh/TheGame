@@ -11,15 +11,9 @@ public class ServerConnectionCallbacks : IConnectionCallbacks
         _serverCallbacks = serverCallbacks;
     }
 
-    public Task OnDisconnect(Connection connection)
+    public void OnDisconnect(Connection connection)
     {
         _server.Disconnect(connection);
-
-        return _serverCallbacks.OnDisconnect(connection, _server);
-    }
-
-    public Task OnRead(byte[] data, Connection connection)
-    {
-        return _serverCallbacks.OnRead(data, connection, _server);
+        _serverCallbacks.OnDisconnect(connection, _server);
     }
 }

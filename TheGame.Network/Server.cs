@@ -66,15 +66,15 @@ public class Server
 
     private async Task HandleNewConnection(Connection connection)
     {
-        await _serverCallbacks.OnConnection(connection, this);
+        await _serverCallbacks.OnBeforeConnection(connection, this);
 
         if (_connections.TryAdd(connection.Id, connection))
         {
-            await connection.Start();
+            await Task.WhenAll(connection.Start(), _serverCallbacks.OnAfterConnection(connection, this));
         }
         else
         {
-            await connection.Stop();
+            connection.Stop();
         }
     }
 }
