@@ -23,11 +23,24 @@ public class Game
 
     private async Task StartWriting()
     {
+        Console.Write("Name: ");
+        var name = Console.ReadLine() ?? string.Empty;
+
+        var joinGame = Serializer.Serialize(new ClientMessage
+        {
+            JoinGame = new JoinGame
+            {
+                Name = name
+            }
+        });
+
+        await _connection.Write(joinGame);
+
         while (!_connection.Disconnected)
         {
             var message = Console.ReadLine() ?? string.Empty;
 
-            var serializedClientMessage = Serializer.Serialize(new ClientMessage
+            var sendChat = Serializer.Serialize(new ClientMessage
             {
                 SendChat = new SendChat
                 {
@@ -35,7 +48,7 @@ public class Game
                 }
             });
 
-            await _connection.Write(serializedClientMessage);
+            await _connection.Write(sendChat);
         }
     }
 
@@ -55,15 +68,15 @@ public class Game
         {
             case ServerMessage.MessageOneofCase.Chat:
                 var chat = serverMessage.Chat;
-                _logger.LogInformation("{playerId}: {text}", chat.Player.Id, chat.Text);
+                _logger.LogInformation("{player}: {text}", chat.Player.Name, chat.Text);
                 break;
             case ServerMessage.MessageOneofCase.PlayerJoined:
                 var playerJoined = serverMessage.PlayerJoined;
-                _logger.LogInformation("Player {playerId} joined", playerJoined.Player.Id);
+                _logger.LogInformation("{player} joined", playerJoined.Player.Name);
                 break;
             case ServerMessage.MessageOneofCase.PlayerLeft:
                 var playerLeft = serverMessage.PlayerLeft;
-                _logger.LogInformation("Player {playerId} left", playerLeft.Player.Id);
+                _logger.LogInformation("{player} left", playerLeft.Player.Name);
                 break;
         }
     }

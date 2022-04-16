@@ -17,7 +17,7 @@ public class Server
     public Server(IPAddress ip, int port, IServerCallbacks serverCallbacks, ILogger<Server> logger)
     {
         _listener = new TcpListener(ip, port);
-        _connectionCallbacks = new ServerConnectionCallbacks(this, serverCallbacks);
+        _connectionCallbacks = new ServerConnectionCallbacks(this);
         _serverCallbacks = serverCallbacks;
         _logger = logger;
     }
@@ -62,15 +62,15 @@ public class Server
         {
             _logger.LogError("Could not remove connection {0} from dictionary", connection.Id);
         }
+
+        _serverCallbacks.OnDisconnect(connection.Id);
     }
 
     private async Task HandleNewConnection(Connection connection)
     {
-        await _serverCallbacks.OnBeforeConnection(connection, this);
-
         if (_connections.TryAdd(connection.Id, connection))
         {
-            await Task.WhenAll(connection.Start(), _serverCallbacks.OnAfterConnection(connection, this));
+            await Task.WhenAll(connection.Start(), _serverCallbacks.OnConnection(connection));
         }
         else
         {
