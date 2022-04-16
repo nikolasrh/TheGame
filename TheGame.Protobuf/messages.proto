@@ -11,6 +11,7 @@ message ServerMessage {
 
 message Player {
   string id = 1;
+  string name = 2;
 }
 
 message PlayerJoined {
@@ -28,8 +29,13 @@ message Chat {
 
 message ClientMessage {
   oneof message {
-    SendChat send_chat = 1;
+    JoinGame join_game = 1;
+    SendChat send_chat = 2;
   }
+}
+
+message JoinGame {
+  string name = 1;
 }
 
 message SendChat {
