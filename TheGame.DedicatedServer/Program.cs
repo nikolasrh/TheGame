@@ -19,4 +19,8 @@ var gameEventHandler = new GameEventHandler(game, serverMessageQueue);
 var serverCallbacks = new GameServerCallbacks(gameEventHandler);
 var server = new Server(IPAddress.Any, 6000, serverCallbacks, loggerFactory.CreateLogger<Server>());
 
-await Task.WhenAll(server.Start(cancellationToken), game.Run(server));
+server.StartTcpListeningThread();
+
+await game.Run(server);
+
+

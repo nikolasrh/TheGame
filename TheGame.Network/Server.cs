@@ -8,42 +8,54 @@ namespace TheGame.Network;
 
 public class Server
 {
-    private readonly TcpListener _listener;
+    private readonly ConcurrentBag<Connection> _newConnections = new();
     private readonly ConcurrentDictionary<Guid, Connection> _connections = new();
     private readonly IConnectionCallbacks _connectionCallbacks;
+    private readonly IPAddress _ip;
+    private readonly int _port;
     private readonly IServerCallbacks _serverCallbacks;
     private readonly ILogger<Server> _logger;
 
     public Server(IPAddress ip, int port, IServerCallbacks serverCallbacks, ILogger<Server> logger)
     {
-        _listener = new TcpListener(ip, port);
         _connectionCallbacks = new ServerConnectionCallbacks(this);
+        _ip = ip;
+        _port = port;
         _serverCallbacks = serverCallbacks;
         _logger = logger;
     }
 
-    public async Task Start(CancellationToken cancellationToken)
+    public void StartTcpListeningThread()
     {
-        _listener.Start();
+        var acceptTcpConnectionsThread = new Thread(AcceptTcpConnections);
+        acceptTcpConnectionsThread.Start();
+    }
+
+    private void AcceptTcpConnections()
+    {
+        var listener = new TcpListener(_ip, _port);
 
         try
         {
+            listener.Start();
+
             while (true)
             {
                 _logger.LogInformation("Waiting for connection...");
-                var client = await _listener.AcceptTcpClientAsync(cancellationToken);
+                var client = listener.AcceptTcpClient();
 
                 var connection = new Connection(client, _connectionCallbacks, _logger);
 
-                // TODO: Decide if Task.Run is a good solution
+                // TODO: Add to _newConnections
                 var _ = Task.Run(() => HandleNewConnection(connection));
 
                 _logger.LogInformation("New connection {0}", connection.Id);
             }
         }
-        catch
+        catch (Exception e)
         {
-            _listener.Stop();
+            _logger.LogInformation(e, "Stopping listener");
+            listener.Stop();
         }
     }
 
