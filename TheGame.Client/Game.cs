@@ -16,12 +16,18 @@ public class Game
         _logger = logger;
     }
 
-    public async Task Run()
+    public async Task RunAsync()
     {
-        await Task.WhenAll(_connection.Start(), StartReading(), StartWriting());
+        var readConnectionThread = new Thread(ReadConnection);
+        readConnectionThread.Start();
+
+        var flushConnectionThread = new Thread(FlushConnection);
+        flushConnectionThread.Start();
+
+        await StartChatAsync();
     }
 
-    private async Task StartWriting()
+    private async Task StartChatAsync()
     {
         Console.Write("Name: ");
         var name = Console.ReadLine() ?? string.Empty;
@@ -34,7 +40,7 @@ public class Game
             }
         });
 
-        await _connection.Write(joinGame);
+        await _connection.WriteAsync(joinGame);
 
         while (!_connection.Disconnected)
         {
@@ -48,17 +54,42 @@ public class Game
                 }
             });
 
-            await _connection.Write(sendChat);
+            await _connection.WriteAsync(sendChat);
         }
     }
 
-    private async Task StartReading()
+    private void FlushConnection()
     {
-        byte[]? data;
-        while ((data = await _connection.Read()) != null)
+        try
         {
-            var serverMessage = Serializer.Deserialize(data);
-            HandleServerMessage(serverMessage);
+            while (true)
+            {
+                _connection.Flush();
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(e, $"Stopping {nameof(FlushConnection)}");
+        }
+    }
+
+    private void ReadConnection()
+    {
+        try
+        {
+            while (true)
+            {
+                byte[]? data;
+                while ((data = _connection.Read()) != null)
+                {
+                    var serverMessage = Serializer.Deserialize(data);
+                    HandleServerMessage(serverMessage);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(e, $"Stopping {nameof(ReadConnection)}");
         }
     }
 

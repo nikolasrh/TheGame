@@ -13,7 +13,7 @@ public class GameLoop
         _logger = logger;
     }
 
-    public async Task Run(Action<TimeSpan> update)
+    public async Task RunAsync(Action<TimeSpan> update)
     {
         var prev = DateTime.Now - _delayBetweenTicks;
 
@@ -29,7 +29,6 @@ public class GameLoop
 
             await Delay(next);
         }
-
     }
 
     private Task Delay(DateTime next)

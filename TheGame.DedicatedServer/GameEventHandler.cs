@@ -33,7 +33,7 @@ public class GameEventHandler
         _serverMessageQueue.Write(serverMessage);
     }
 
-    public void HandleClientMessage(byte[] data, Guid connectionId)
+    public void HandleClientMessage(Guid connectionId, byte[] data)
     {
         var clientMessage = Serializer.Deserialize(data);
 

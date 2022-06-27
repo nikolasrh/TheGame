@@ -19,7 +19,7 @@ public class ServerMessageQueue
         _logger = logger;
     }
 
-    public ValueTask<ServerMessage> Read()
+    public ValueTask<ServerMessage> ReadAsync()
     {
         return _channel.Reader.ReadAsync(_cancellationToken);
     }

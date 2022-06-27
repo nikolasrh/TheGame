@@ -18,15 +18,15 @@ public class Game
         _logger = logger;
     }
 
-    public async Task Run(Server server)
+    public async Task RunAsync(Server server)
     {
         while (true)
         {
             _logger.LogInformation("Game waiting to read...");
-            var serverMessage = await _serverMessageQueue.Read();
+            var serverMessage = await _serverMessageQueue.ReadAsync();
             _logger.LogInformation("Game read {0}", serverMessage);
             var data = Serializer.Serialize(serverMessage);
-            await server.WriteAll(data);
+            await server.WriteAllAsync(data);
         }
     }
 

@@ -29,12 +29,7 @@ public class Connection
     public Guid Id { get; } = Guid.NewGuid();
     public bool Disconnected { get; private set; } = false;
 
-    public async Task Start()
-    {
-        await StartWriting();
-    }
-
-    public async Task Write(byte[] bytes)
+    public async Task WriteAsync(byte[] bytes)
     {
         if (Disconnected) return;
 
@@ -52,19 +47,17 @@ public class Connection
         }
     }
 
-    private async Task StartWriting()
+    public void Flush()
     {
         try
         {
             var reader = _outgoing.Reader;
 
-            while (!Disconnected)
+            while (!Disconnected && reader.TryRead(out var result))
             {
-                var result = await reader.ReadAsync(_cancellationToken);
-
                 foreach (var memory in result.Buffer)
                 {
-                    await _networkStream.WriteAsync(memory, _cancellationToken);
+                    _networkStream.Write(memory.Span);
                 }
 
                 reader.AdvanceTo(result.Buffer.End);
@@ -77,26 +70,25 @@ public class Connection
         }
     }
 
-    public async Task<byte[]?> Read()
+    public byte[]? Read()
     {
         try
         {
-            while (!Disconnected)
-            {
-                var prefixBuffer = new byte[4];
-                var totalBytesReadToPrefixBuffer = await _networkStream.ReadAsync(prefixBuffer, 0, prefixBuffer.Length, _cancellationToken);
+            if (Disconnected || !_networkStream.DataAvailable) return null;
 
-                if (totalBytesReadToPrefixBuffer == 0) continue;
+            var prefixBuffer = new byte[4];
+            var totalBytesReadToPrefixBuffer = _networkStream.Read(prefixBuffer, 0, prefixBuffer.Length);
 
-                var length = BitConverter.ToInt32(prefixBuffer);
-                var buffer = new byte[length];
+            if (totalBytesReadToPrefixBuffer == 0) return null;
 
-                var totalBytesReadToBuffer = await _networkStream.ReadAsync(buffer, 0, length, _cancellationToken);
+            var length = BitConverter.ToInt32(prefixBuffer);
+            var buffer = new byte[length];
 
-                if (totalBytesReadToBuffer == 0) continue;
+            var totalBytesReadToBuffer = _networkStream.Read(buffer, 0, length);
 
-                return buffer;
-            }
+            if (totalBytesReadToBuffer == 0) return null;
+
+            return buffer;
         }
         catch (Exception e)
         {

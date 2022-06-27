@@ -11,13 +11,13 @@ public class GameServerCallbacks : IServerCallbacks
         _gameEventHandler = clientMessageHandler;
     }
 
-    public async Task OnConnection(Connection connection)
+    public void OnConnection(Connection connection)
     {
-        byte[]? data;
-        while ((data = await connection.Read()) != null)
-        {
-            _gameEventHandler.HandleClientMessage(data, connection.Id);
-        }
+    }
+
+    public void OnConnectionRead(Guid connectionId, byte[] data)
+    {
+        _gameEventHandler.HandleClientMessage(connectionId, data);
     }
 
     public void OnDisconnect(Guid connectionId)
