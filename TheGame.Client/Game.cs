@@ -16,7 +16,7 @@ public class Game
         _logger = logger;
     }
 
-    public async Task RunAsync()
+    public void Run()
     {
         var readConnectionThread = new Thread(ReadConnection);
         readConnectionThread.Start();
@@ -24,10 +24,10 @@ public class Game
         var flushConnectionThread = new Thread(FlushConnection);
         flushConnectionThread.Start();
 
-        await StartChatAsync();
+        StartChat();
     }
 
-    private async Task StartChatAsync()
+    private void StartChat()
     {
         Console.Write("Name: ");
         var name = Console.ReadLine() ?? string.Empty;
@@ -40,7 +40,7 @@ public class Game
             }
         });
 
-        await _connection.WriteAsync(joinGame);
+        _connection.Write(joinGame);
 
         while (!_connection.Disconnected)
         {
@@ -54,7 +54,7 @@ public class Game
                 }
             });
 
-            await _connection.WriteAsync(sendChat);
+            _connection.Write(sendChat);
         }
     }
 

@@ -1,5 +1,6 @@
-using System.IO.Pipelines;
+using System.Buffers;
 using System.Net.Sockets;
+using System.Threading.Channels;
 
 using Microsoft.Extensions.Logging;
 
@@ -7,7 +8,7 @@ namespace TheGame.Network;
 
 public class Connection
 {
-    private readonly Pipe _outgoing = new();
+    private readonly Channel<byte[]> _channel;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly CancellationToken _cancellationToken;
     private readonly TcpClient _tcpClient;
@@ -17,6 +18,12 @@ public class Connection
 
     public Connection(TcpClient tcpClient, IConnectionCallbacks connectionCallbacks, ILogger logger)
     {
+        _channel = Channel.CreateUnbounded<byte[]>(new UnboundedChannelOptions
+        {
+            AllowSynchronousContinuations = false,
+            SingleReader = true,
+            SingleWriter = true
+        });
         tcpClient.SendTimeout = 5000;
         tcpClient.NoDelay = true;
         _cancellationToken = _cancellationTokenSource.Token;
@@ -29,7 +36,7 @@ public class Connection
     public Guid Id { get; } = Guid.NewGuid();
     public bool Disconnected { get; private set; } = false;
 
-    public async Task WriteAsync(byte[] bytes)
+    public void Write(byte[] bytes)
     {
         if (Disconnected) return;
 
@@ -38,11 +45,14 @@ public class Connection
             var prefix = BitConverter.GetBytes(bytes.Length);
             var bytesWithPrefix = prefix.Concat(bytes).ToArray();
 
-            await _outgoing.Writer.WriteAsync(bytesWithPrefix, _cancellationToken);
+            if (!_channel.Writer.TryWrite(bytesWithPrefix))
+            {
+                _logger.LogError("Error when writing to channel");
+            }
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error when writing to pipe");
+            _logger.LogError(e, "Error when writing to channel");
             Stop();
         }
     }
@@ -51,16 +61,9 @@ public class Connection
     {
         try
         {
-            var reader = _outgoing.Reader;
-
-            while (!Disconnected && reader.TryRead(out var result))
+            while (!Disconnected && _channel.Reader.TryRead(out var item))
             {
-                foreach (var memory in result.Buffer)
-                {
-                    _networkStream.Write(memory.Span);
-                }
-
-                reader.AdvanceTo(result.Buffer.End);
+                _networkStream.Write(item);
             }
         }
         catch (Exception e)

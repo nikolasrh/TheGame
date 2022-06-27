@@ -18,7 +18,7 @@ var connectionCallbacks = new ConnectionCallbacks(loggerFactory.CreateLogger<Con
 var connection = new Connection(client, connectionCallbacks, loggerFactory.CreateLogger<Connection>());
 
 var game = new Game(connection, loggerFactory.CreateLogger<Game>());
-await game.RunAsync();
+game.Run();
 
 // var gameLoopOptions = new GameLoopOptions(tickRate: 1);
 // var gameLoop = new GameLoop(gameLoopOptions, loggerFactory.CreateLogger<GameLoop>());

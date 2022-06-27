@@ -9,19 +9,25 @@ namespace TheGame.DedicatedServer;
 public class ServerMessageQueue
 {
     private readonly Channel<ServerMessage> _channel;
-    private readonly CancellationToken _cancellationToken;
     private readonly ILogger<ServerMessageQueue> _logger;
 
-    public ServerMessageQueue(CancellationToken cancellationToken, ILogger<ServerMessageQueue> logger)
+    public ServerMessageQueue(ILogger<ServerMessageQueue> logger)
     {
-        _channel = Channel.CreateUnbounded<ServerMessage>();
-        _cancellationToken = cancellationToken;
+        _channel = Channel.CreateUnbounded<ServerMessage>(new UnboundedChannelOptions
+        {
+            AllowSynchronousContinuations = false,
+            SingleReader = true,
+            SingleWriter = true
+        });
         _logger = logger;
     }
 
-    public ValueTask<ServerMessage> ReadAsync()
+    public IEnumerable<ServerMessage> ReadAll()
     {
-        return _channel.Reader.ReadAsync(_cancellationToken);
+        while (_channel.Reader.TryRead(out var serverMessage))
+        {
+            yield return serverMessage;
+        }
     }
 
     public void Write(ServerMessage serverMessage)

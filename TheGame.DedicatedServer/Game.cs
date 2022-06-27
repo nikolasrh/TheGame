@@ -18,16 +18,22 @@ public class Game
         _logger = logger;
     }
 
-    public async Task RunAsync(Server server)
+    public void Start(GameLoop gameLoop, Server server)
     {
-        while (true)
+        var gameThread = new Thread(() =>
         {
-            _logger.LogInformation("Game waiting to read...");
-            var serverMessage = await _serverMessageQueue.ReadAsync();
-            _logger.LogInformation("Game read {0}", serverMessage);
-            var data = Serializer.Serialize(serverMessage);
-            await server.WriteAllAsync(data);
-        }
+            gameLoop.Run(_ =>
+            {
+                var serverMessages = _serverMessageQueue.ReadAll();
+                foreach (var serverMessage in serverMessages)
+                {
+                    _logger.LogInformation("Game read {0}", serverMessage);
+                    var data = Serializer.Serialize(serverMessage);
+                    server.WriteAll(data);
+                }
+            });
+        });
+        gameThread.Start();
     }
 
     public void AddPlayer(Player player)
