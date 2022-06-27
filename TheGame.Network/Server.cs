@@ -8,7 +8,6 @@ namespace TheGame.Network;
 
 public class Server
 {
-    private readonly ConcurrentBag<Connection> _newConnections = new();
     private readonly ConcurrentDictionary<Guid, Connection> _connections = new();
     private readonly IConnectionCallbacks _connectionCallbacks;
     private readonly IPAddress _ip;
@@ -25,10 +24,34 @@ public class Server
         _logger = logger;
     }
 
-    public void StartTcpListeningThread()
+    public void Start()
     {
         var acceptTcpConnectionsThread = new Thread(AcceptTcpConnections);
         acceptTcpConnectionsThread.Start();
+
+        var readConnectionsThread = new Thread(ReadConnections);
+        readConnectionsThread.Start();
+
+        var flushConnectionsThread = new Thread(FlushConnections);
+        flushConnectionsThread.Start();
+    }
+
+    private void FlushConnections()
+    {
+        try
+        {
+            while (true)
+            {
+                foreach (var (_, connection) in _connections)
+                {
+                    connection.Flush();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(e, $"Stopping {nameof(FlushConnections)}");
+        }
     }
 
     private void AcceptTcpConnections()
@@ -46,22 +69,49 @@ public class Server
 
                 var connection = new Connection(client, _connectionCallbacks, _logger);
 
-                // TODO: Add to _newConnections
-                var _ = Task.Run(() => HandleNewConnection(connection));
-
-                _logger.LogInformation("New connection {0}", connection.Id);
+                if (_connections.TryAdd(connection.Id, connection))
+                {
+                    _serverCallbacks.OnConnection(connection);
+                    _logger.LogInformation("New connection {0}", connection.Id);
+                }
+                else
+                {
+                    connection.Stop();
+                }
             }
         }
         catch (Exception e)
         {
-            _logger.LogInformation(e, "Stopping listener");
+            _logger.LogInformation(e, $"Stopping {nameof(AcceptTcpConnections)}");
             listener.Stop();
         }
     }
 
-    public async Task WriteAll(byte[] data)
+    private void ReadConnections()
     {
-        var tasks = _connections.Select(connection => connection.Value.Write(data)).ToArray();
+        try
+        {
+            while (true)
+            {
+                foreach (var (_, connection) in _connections)
+                {
+                    byte[]? data;
+                    while ((data = connection.Read()) != null)
+                    {
+                        _serverCallbacks.OnConnectionRead(connection.Id, data);
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(e, $"Stopping {nameof(ReadConnections)}");
+        }
+    }
+
+    public async Task WriteAllAsync(byte[] data)
+    {
+        var tasks = _connections.Select(connection => connection.Value.WriteAsync(data)).ToArray();
 
         _logger.LogInformation("Wrote to {0} connections", tasks.Length);
 
@@ -76,17 +126,5 @@ public class Server
         }
 
         _serverCallbacks.OnDisconnect(connection.Id);
-    }
-
-    private async Task HandleNewConnection(Connection connection)
-    {
-        if (_connections.TryAdd(connection.Id, connection))
-        {
-            await Task.WhenAll(connection.Start(), _serverCallbacks.OnConnection(connection));
-        }
-        else
-        {
-            connection.Stop();
-        }
     }
 }
