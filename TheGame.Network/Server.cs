@@ -32,9 +32,9 @@ public class Server
         var readConnectionsThread = new Thread(ReadConnections);
         readConnectionsThread.Start();
 
-        var gameLoopThread = new Thread(async () =>
+        var gameLoopThread = new Thread(() =>
         {
-            await gameLoop.RunAsync(time =>
+            gameLoop.Run(time =>
             {
                 FlushConnections();
             });
@@ -112,13 +112,12 @@ public class Server
         }
     }
 
-    public async Task WriteAllAsync(byte[] data)
+    public void WriteAll(byte[] data)
     {
-        var tasks = _connections.Select(connection => connection.Value.WriteAsync(data)).ToArray();
-
-        _logger.LogInformation("Wrote to {0} connections", tasks.Length);
-
-        await Task.WhenAll(tasks);
+        foreach (var (_, connection) in _connections)
+        {
+            connection.Write(data);
+        }
     }
 
     public void Disconnect(Connection connection)

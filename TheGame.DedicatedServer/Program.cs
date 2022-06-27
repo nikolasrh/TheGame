@@ -13,14 +13,16 @@ var loggerFactory = LoggerFactory.Create(builder =>
     builder.AddConsole();
 });
 
-var serverMessageQueue = new ServerMessageQueue(cancellationToken, loggerFactory.CreateLogger<ServerMessageQueue>());
+var serverMessageQueue = new ServerMessageQueue(loggerFactory.CreateLogger<ServerMessageQueue>());
 var game = new Game(serverMessageQueue, loggerFactory.CreateLogger<Game>());
 var gameEventHandler = new GameEventHandler(game, serverMessageQueue);
 var serverCallbacks = new GameServerCallbacks(gameEventHandler);
 var server = new Server(IPAddress.Any, 6000, serverCallbacks, loggerFactory.CreateLogger<Server>());
 
+var serverLoop = new GameLoop(new GameLoopOptions(1), loggerFactory.CreateLogger<GameLoop>());
+
+server.Start(serverLoop);
+
 var gameLoop = new GameLoop(new GameLoopOptions(1), loggerFactory.CreateLogger<GameLoop>());
 
-server.Start(gameLoop);
-
-await game.RunAsync(server);
+game.Start(gameLoop, server);
