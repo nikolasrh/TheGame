@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace TheGame.Client;
+namespace TheGame.Network;
 
 public class GameLoop
 {

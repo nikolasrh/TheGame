@@ -24,7 +24,7 @@ public class Server
         _logger = logger;
     }
 
-    public void Start()
+    public void Start(GameLoop gameLoop)
     {
         var acceptTcpConnectionsThread = new Thread(AcceptTcpConnections);
         acceptTcpConnectionsThread.Start();
@@ -32,25 +32,28 @@ public class Server
         var readConnectionsThread = new Thread(ReadConnections);
         readConnectionsThread.Start();
 
-        var flushConnectionsThread = new Thread(FlushConnections);
-        flushConnectionsThread.Start();
+        var gameLoopThread = new Thread(async () =>
+        {
+            await gameLoop.RunAsync(time =>
+            {
+                FlushConnections();
+            });
+        });
+        gameLoopThread.Start();
     }
 
     private void FlushConnections()
     {
         try
         {
-            while (true)
+            foreach (var (_, connection) in _connections)
             {
-                foreach (var (_, connection) in _connections)
-                {
-                    connection.Flush();
-                }
+                connection.Flush();
             }
         }
         catch (Exception e)
         {
-            _logger.LogInformation(e, $"Stopping {nameof(FlushConnections)}");
+            _logger.LogInformation(e, $"Exception in {nameof(FlushConnections)}");
         }
     }
 
@@ -105,7 +108,7 @@ public class Server
         }
         catch (Exception e)
         {
-            _logger.LogInformation(e, $"Stopping {nameof(ReadConnections)}");
+            _logger.LogInformation(e, $"Exception in {nameof(ReadConnections)}");
         }
     }
 

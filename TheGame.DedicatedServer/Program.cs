@@ -19,5 +19,8 @@ var gameEventHandler = new GameEventHandler(game, serverMessageQueue);
 var serverCallbacks = new GameServerCallbacks(gameEventHandler);
 var server = new Server(IPAddress.Any, 6000, serverCallbacks, loggerFactory.CreateLogger<Server>());
 
-server.Start();
+var gameLoop = new GameLoop(new GameLoopOptions(1), loggerFactory.CreateLogger<GameLoop>());
+
+server.Start(gameLoop);
+
 await game.RunAsync(server);
