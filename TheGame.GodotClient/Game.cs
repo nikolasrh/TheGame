@@ -1,0 +1,176 @@
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
+
+using Microsoft.Extensions.Logging;
+
+using TheGame.Common;
+using TheGame.NetworkConnection;
+using TheGame.Protobuf;
+
+namespace TheGame.GodotClient;
+
+public class Game
+{
+    private readonly ConcurrentDictionary<Guid, Protobuf.Player> _players = new();
+    private readonly Loop _loop;
+    private readonly Connection<ServerMessage, ClientMessage> _connection;
+    private readonly ILogger _logger;
+
+    public Game(Loop loop, Connection<ServerMessage, ClientMessage> connection, ILogger<Game> logger)
+    {
+        _loop = loop;
+        _connection = connection;
+        _logger = logger;
+    }
+
+    public void Start()
+    {
+        _connection.Disconnected += _loop.Exit;
+        _connection.MessageReceived += MessageHandler;
+
+        var gameThread = new Thread(() =>
+        {
+            _loop.Run(_ => _connection.HandleIncomingMessages());
+        });
+        gameThread.Start();
+    }
+
+
+    public void JoinGame(string name)
+    {
+        var joinGame = new ClientMessage
+        {
+            JoinGame = new JoinGame
+            {
+                Name = name
+            }
+        };
+
+        SendMessage(joinGame);
+    }
+
+    public void LeaveGame()
+    {
+        var leaveGame = new ClientMessage
+        {
+            LeaveGame = new LeaveGame()
+        };
+
+        SendMessage(leaveGame);
+
+        _connection.Disconnect();
+    }
+
+    public void SendChatMessage(string message)
+    {
+        var sendChat = new ClientMessage
+        {
+            SendChat = new SendChat
+            {
+                Text = message
+            }
+        };
+
+        SendMessage(sendChat);
+    }
+
+    public void ChangeName(string name)
+    {
+        var changeName = new ClientMessage
+        {
+            ChangeName = new ChangeName
+            {
+                Name = name
+            }
+        };
+
+        SendMessage(changeName);
+    }
+
+    private void SendMessage(ClientMessage message)
+    {
+        _connection.QueueMessage(message);
+        _connection.SendQueuedMessages();
+    }
+
+    private void MessageHandler(ServerMessage message)
+    {
+        switch (message.MessageCase)
+        {
+            case ServerMessage.MessageOneofCase.Chat:
+                HandleChat(message.Chat);
+                break;
+            case ServerMessage.MessageOneofCase.PlayerJoined:
+                HandlePlayerJoined(message.PlayerJoined);
+                break;
+            case ServerMessage.MessageOneofCase.PlayerLeft:
+                HandlePlayerLeft(message.PlayerLeft);
+                break;
+            case ServerMessage.MessageOneofCase.Welcome:
+                HandleWelcome(message.Welcome);
+                break;
+            case ServerMessage.MessageOneofCase.PlayerUpdated:
+                HandlePlayerUpdated(message.PlayerUpdated);
+                break;
+        }
+    }
+
+    public delegate void ChatMessageReceivedEventHandler(Player player, string message);
+    public delegate void PlayerJoinedEventHandler(Player player);
+    public delegate void PlayerLeftEventHandler(Player player);
+    public delegate void PlayerUpdatedEventHandler(Player oldPlayer, Player newPlayer);
+    public event ChatMessageReceivedEventHandler ChatMesageReceived;
+    public event PlayerJoinedEventHandler PlayerJoinedEvent;
+    public event PlayerLeftEventHandler PlayerLeftEvent;
+    public event PlayerUpdatedEventHandler PlayerUpdated;
+
+
+    private void HandleChat(Protobuf.Chat chat)
+    {
+        if (_players.TryGetValue(Guid.Parse(chat.PlayerId), out var player))
+        {
+            ChatMesageReceived?.Invoke(player, chat.Text);
+        }
+    }
+
+    private void HandlePlayerJoined(PlayerJoined playerJoined)
+    {
+        var player = playerJoined.Player;
+
+        if (_players.TryAdd(Guid.Parse(player.Id), player))
+        {
+            PlayerJoinedEvent?.Invoke(player);
+        }
+    }
+
+    private void HandlePlayerLeft(PlayerLeft playerLeft)
+    {
+        if (_players.TryGetValue(Guid.Parse(playerLeft.PlayerId), out var player))
+        {
+            PlayerLeftEvent?.Invoke(player);
+        }
+    }
+
+    private void HandleWelcome(Welcome welcome)
+    {
+        foreach (var player in welcome.GameState.Players)
+        {
+            _players.AddOrUpdate(Guid.Parse(player.Id), _ => player, (_, _) => player);
+        }
+    }
+
+    private void HandlePlayerUpdated(PlayerUpdated playerUpdated)
+    {
+        var newPlayer = playerUpdated.Player;
+        var connectionId = Guid.Parse(newPlayer.Id);
+
+        if (_players.TryGetValue(connectionId, out var oldPlayer))
+        {
+            if (_players.TryUpdate(connectionId, newPlayer, oldPlayer))
+            {
+                PlayerUpdated?.Invoke(oldPlayer, newPlayer);
+            }
+        }
+    }
+}
