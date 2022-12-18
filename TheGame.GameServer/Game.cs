@@ -63,7 +63,7 @@ public class Game
 
     public void AddPlayer(Player player)
     {
-        _players.TryAdd(player.Id, player);
+        _players.TryAdd(player.ConnectionId, player);
     }
 
     public Player? RemovePlayer(Guid id)

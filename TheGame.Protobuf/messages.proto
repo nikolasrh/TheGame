@@ -6,6 +6,7 @@ message ServerMessage {
     PlayerJoined player_joined = 1;
     PlayerLeft player_left = 2;
     Chat chat = 3;
+    SyncPlayers sync_players = 4;
   }
 }
 
@@ -25,6 +26,10 @@ message PlayerLeft {
 message Chat {
   Player player = 1;
   string text = 2;
+}
+
+message SyncPlayers {
+  repeated Player players = 1;
 }
 
 message ClientMessage {

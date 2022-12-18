@@ -45,7 +45,7 @@ public class GameEventHandler
             {
                 Player = new Protobuf.Player
                 {
-                    Id = player.Value.Id.ToString(),
+                    Id = player.Value.ConnectionId.ToString(),
                     Name = player.Value.Name
                 }
             }
@@ -76,27 +76,40 @@ public class GameEventHandler
 
         if (newConnection == null) return;
 
-        var player = new Player
-        {
-            Id = connectionId,
-            Name = joinGame.Name
-        };
-
-        _game.AddPlayer(player);
-
-        var serverMessage = new ServerMessage
+        var playerJoinedMessage = new ServerMessage
         {
             PlayerJoined = new Protobuf.PlayerJoined
             {
                 Player = new Protobuf.Player
                 {
-                    Id = player.Id.ToString(),
-                    Name = player.Name
+                    Id = connectionId.ToString(),
+                    Name = joinGame.Name
                 }
             }
         };
 
-        _server.SendMessage(serverMessage);
+        var existingPlayers = _game.GetPlayers();
+
+        foreach (var player in existingPlayers)
+        {
+            _server.SendMessage(player.ConnectionId, playerJoinedMessage);
+        }
+
+        var syncPlayers = new SyncPlayers();
+        syncPlayers.Players.AddRange(existingPlayers.Select(p => new Protobuf.Player
+        {
+            Id = p.ConnectionId.ToString(),
+            Name = p.Name
+        }));
+        var syncPlayersMessage = new ServerMessage
+        {
+            SyncPlayers = syncPlayers
+        };
+
+        _server.SendMessage(connectionId, syncPlayersMessage);
+
+        var newPlayer = new Player(connectionId, joinGame.Name);
+        _game.AddPlayer(newPlayer);
     }
 
     private void HandleLeaveGame(Guid connectionId)
@@ -116,7 +129,7 @@ public class GameEventHandler
             {
                 Player = new Protobuf.Player
                 {
-                    Id = player.Value.Id.ToString(),
+                    Id = player.Value.ConnectionId.ToString(),
                     Name = player.Value.Name
                 },
                 Text = sendChat.Text

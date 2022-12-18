@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+
 using Microsoft.Extensions.Logging;
 
 using TheGame.NetworkConnection;
@@ -8,6 +10,7 @@ namespace TheGame.GameClient;
 public class ClientConnectionCallbacks : IConnectionCallbacks<ServerMessage>
 {
     private readonly ILogger _logger;
+    private readonly ConcurrentDictionary<Guid, Protobuf.Player> _players = new();
 
     public ClientConnectionCallbacks(ILogger<ClientConnectionCallbacks> logger)
     {
@@ -34,6 +37,12 @@ public class ClientConnectionCallbacks : IConnectionCallbacks<ServerMessage>
             case ServerMessage.MessageOneofCase.PlayerLeft:
                 var playerLeft = message.PlayerLeft;
                 _logger.LogInformation("{player} disconnected", playerLeft.Player.Name);
+                break;
+            case ServerMessage.MessageOneofCase.SyncPlayers:
+                foreach (var player in message.SyncPlayers.Players)
+                {
+                    _players.AddOrUpdate(Guid.Parse(player.Id), _id => player, (_id, _player) => player);
+                }
                 break;
         }
     }
