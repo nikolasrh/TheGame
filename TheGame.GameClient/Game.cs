@@ -10,6 +10,8 @@ public class Game
 {
     private readonly Connection<ServerMessage, ClientMessage> _connection;
     private readonly ILogger _logger;
+    private string PlayerName { get; set; } = string.Empty;
+    private bool Exiting { get; set; } = false;
 
     public Game(Connection<ServerMessage, ClientMessage> connection, ILogger<Game> logger)
     {
@@ -20,9 +22,9 @@ public class Game
     public void Start(Loop loop)
     {
         Console.Write("Name: ");
-        var playerName = Console.ReadLine() ?? string.Empty;
+        PlayerName = Console.ReadLine() ?? string.Empty;
 
-        SendJoinGameMessage(playerName);
+        SendJoinGameMessage();
 
         var gameThread = new Thread(() =>
         {
@@ -34,21 +36,39 @@ public class Game
         {
             var message = Console.ReadLine() ?? string.Empty;
 
+            if (message == "/exit")
+            {
+                SendLeaveGameMessage();
+                loop.Exit();
+                _connection.Disconnect();
+                break;
+            }
+
             SendChatMessage(message);
         }
     }
 
-    private void SendJoinGameMessage(string playerName)
+    private void SendJoinGameMessage()
     {
         var joinGame = new ClientMessage
         {
             JoinGame = new JoinGame
             {
-                Name = playerName
+                Name = PlayerName
             }
         };
 
         _connection.SendMessage(joinGame);
+    }
+
+    private void SendLeaveGameMessage()
+    {
+        var leaveGame = new ClientMessage
+        {
+            LeaveGame = new LeaveGame()
+        };
+
+        _connection.SendMessage(leaveGame);
     }
 
     private void SendChatMessage(string message)

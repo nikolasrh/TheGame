@@ -16,7 +16,7 @@ var loggerFactory = LoggerFactory.Create(builder =>
 var clientMessageSerializer = new ClientMessageSerializer();
 
 var client = new TcpClient();
-await client.ConnectAsync(new IPEndPoint(IPAddress.Loopback, 6000));
+client.Connect(new IPEndPoint(IPAddress.Loopback, 6000));
 
 var clientConnectionCallbacks = new ClientConnectionCallbacks(loggerFactory.CreateLogger<ClientConnectionCallbacks>());
 
@@ -26,8 +26,7 @@ var connection = new Connection<ServerMessage, ClientMessage>(
     client,
     loggerFactory.CreateLogger<Connection<ServerMessage, ClientMessage>>());
 
-var game = new Game(connection, loggerFactory.CreateLogger<Game>());
-
 var loop = new Loop(new LoopOptions(10), loggerFactory.CreateLogger<Loop>());
 
+var game = new Game(connection, loggerFactory.CreateLogger<Game>());
 game.Start(loop);

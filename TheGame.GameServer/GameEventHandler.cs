@@ -61,6 +61,9 @@ public class GameEventHandler
             case ClientMessage.MessageOneofCase.JoinGame:
                 HandleJoinGame(clientMessageEvent.connectionId, clientMessageEvent.message.JoinGame);
                 break;
+            case ClientMessage.MessageOneofCase.LeaveGame:
+                HandleLeaveGame(clientMessageEvent.connectionId);
+                break;
             case ClientMessage.MessageOneofCase.SendChat:
                 HandleSendChat(clientMessageEvent.connectionId, clientMessageEvent.message.SendChat);
                 break;
@@ -94,6 +97,11 @@ public class GameEventHandler
         };
 
         _server.SendMessage(serverMessage);
+    }
+
+    private void HandleLeaveGame(Guid connectionId)
+    {
+        _server.Disconnect(connectionId);
     }
 
     private void HandleSendChat(Guid connectionId, SendChat sendChat)

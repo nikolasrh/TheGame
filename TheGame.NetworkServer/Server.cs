@@ -16,6 +16,7 @@ public class Server<TIncomingMessage, TOutgoingMessage>
     private readonly int _port;
     private readonly IMessageSerializer<TIncomingMessage, TOutgoingMessage> _messageSerializer;
     private readonly IServerCallbacks<TIncomingMessage> _serverCallbacks;
+    private readonly ServerConnectionCallbacksFactory<TIncomingMessage> _serverConnectionCallbacksFactory;
     private readonly ILogger _logger;
 
     public Server(
@@ -23,12 +24,14 @@ public class Server<TIncomingMessage, TOutgoingMessage>
         int port,
         IMessageSerializer<TIncomingMessage, TOutgoingMessage> messageSerializer,
         IServerCallbacks<TIncomingMessage> serverCallbacks,
+        ServerConnectionCallbacksFactory<TIncomingMessage> serverConnectionCallbacksFactory,
         ILogger<Server<TIncomingMessage, TOutgoingMessage>> logger)
     {
         _ip = ip;
         _port = port;
         _messageSerializer = messageSerializer;
         _serverCallbacks = serverCallbacks;
+        _serverConnectionCallbacksFactory = serverConnectionCallbacksFactory;
         _logger = logger;
     }
 
@@ -55,13 +58,13 @@ public class Server<TIncomingMessage, TOutgoingMessage>
                 var client = listener.AcceptTcpClient();
 
                 var connectionId = Guid.NewGuid();
-                var connectionCallbacks = new ServerConnectionCallbacks<TIncomingMessage>(connectionId, _serverCallbacks);
+                var connectionCallbacks = _serverConnectionCallbacksFactory.Create(connectionId);
                 var connection = new Connection<TIncomingMessage, TOutgoingMessage>(connectionCallbacks, _messageSerializer, client, _logger);
 
                 if (_connections.TryAdd(connectionId, connection))
                 {
                     _serverCallbacks.OnConnection(connectionId);
-                    _logger.LogInformation("New connection {0}", connectionId);
+                    _logger.LogInformation("Started connection {0}", connectionId);
                 }
                 else
                 {
@@ -109,10 +112,13 @@ public class Server<TIncomingMessage, TOutgoingMessage>
 
     public void Disconnect(Guid connectionId)
     {
-        if (!_connections.Remove(connectionId, out _))
+        if (_connections.Remove(connectionId, out var connection))
+        {
+            connection.Disconnect();
+        }
+        else
         {
             _logger.LogError("Could not remove connection {0} from dictionary", connectionId);
         }
-        _serverCallbacks.OnDisconnect(connectionId);
     }
 }

@@ -30,7 +30,8 @@ message Chat {
 message ClientMessage {
   oneof message {
     JoinGame join_game = 1;
-    SendChat send_chat = 2;
+    LeaveGame leave_game = 2;
+    SendChat send_chat = 3;
   }
 }
 
@@ -40,4 +41,7 @@ message JoinGame {
 
 message SendChat {
   string text = 1;
+}
+
+message LeaveGame {
 }

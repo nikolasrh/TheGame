@@ -19,6 +19,9 @@ var loggerFactory = LoggerFactory.Create(builder =>
 var clientMessageEventQueue = new ConcurrentQueue<ClientMessageEvent>();
 var connectionEventQueue = new ConcurrentQueue<ConnectionEvent>();
 var serverCallbacks = new ServerCallbacks(clientMessageEventQueue, connectionEventQueue);
+var serverConnectionCallbacksFactory = new ServerConnectionCallbacksFactory<ClientMessage>(
+    serverCallbacks,
+    loggerFactory.CreateLogger<ServerConnectionCallbacks<ClientMessage>>());
 var serverMessageSerializer = new ServerMessageSerializer();
 
 var server = new Server<ClientMessage, ServerMessage>(
@@ -26,6 +29,7 @@ var server = new Server<ClientMessage, ServerMessage>(
     6000,
     serverMessageSerializer,
     serverCallbacks,
+    serverConnectionCallbacksFactory,
     loggerFactory.CreateLogger<Server<ClientMessage, ServerMessage>>());
 
 var loop = new Loop(new LoopOptions(10), loggerFactory.CreateLogger<Loop>());
