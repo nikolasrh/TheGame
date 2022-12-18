@@ -15,9 +15,9 @@
       "request": "launch",
       //"preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/TheGame.Client/bin/Debug/net6.0/TheGame.Client.dll",
+      "program": "${workspaceFolder}/TheGame.GameClient/bin/Debug/net7.0/TheGame.GameClient.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/TheGame.Client",
+      "cwd": "${workspaceFolder}/TheGame.GameClient",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
       "console": "internalConsole",
       "stopAtEntry": false
@@ -26,14 +26,14 @@
       // Use IntelliSense to find out which attributes exist for C# debugging
       // Use hover for the description of the existing attributes
       // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-      "name": "DedicatedServer",
+      "name": "GameServer",
       "type": "coreclr",
       "request": "launch",
       //"preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/TheGame.DedicatedServer/bin/Debug/net6.0/TheGame.DedicatedServer.dll",
+      "program": "${workspaceFolder}/TheGame.GameServer/bin/Debug/net7.0/TheGame.GameServer.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/TheGame.DedicatedServer",
+      "cwd": "${workspaceFolder}/TheGame.GameServer",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
       "console": "internalConsole",
       "stopAtEntry": false
