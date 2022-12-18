@@ -36,15 +36,26 @@ public class Game
         {
             var message = Console.ReadLine() ?? string.Empty;
 
-            if (message == "/exit")
+            const string EXIT_COMMAND = "/exit";
+            const string NAME_COMMAND = "/name ";
+
+            if (message == EXIT_COMMAND)
             {
                 SendLeaveGameMessage();
                 loop.Exit();
                 _connection.Disconnect();
                 break;
             }
-
-            SendChatMessage(message);
+            if (message.StartsWith(NAME_COMMAND))
+            {
+                const int NAME_COMMAND_LENGTH = 6;
+                var name = message.Substring(NAME_COMMAND_LENGTH);
+                SendChangeNameMessage(name);
+            }
+            else
+            {
+                SendChatMessage(message);
+            }
         }
     }
 
@@ -82,5 +93,18 @@ public class Game
         };
 
         _connection.SendMessage(sendChat);
+    }
+
+    private void SendChangeNameMessage(string name)
+    {
+        var changeName = new ClientMessage
+        {
+            ChangeName = new ChangeName
+            {
+                Name = name
+            }
+        };
+
+        _connection.SendMessage(changeName);
     }
 }

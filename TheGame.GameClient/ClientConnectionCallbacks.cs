@@ -27,23 +27,62 @@ public class ClientConnectionCallbacks : IConnectionCallbacks<ServerMessage>
         switch (message.MessageCase)
         {
             case ServerMessage.MessageOneofCase.Chat:
-                var chat = message.Chat;
-                _logger.LogInformation("{player}: {text}", chat.Player.Name, chat.Text);
+                HandleChat(message.Chat);
                 break;
             case ServerMessage.MessageOneofCase.PlayerJoined:
-                var playerJoined = message.PlayerJoined;
-                _logger.LogInformation("{player} connected", playerJoined.Player.Name);
+                HandlePlayerJoined(message.PlayerJoined);
                 break;
             case ServerMessage.MessageOneofCase.PlayerLeft:
-                var playerLeft = message.PlayerLeft;
-                _logger.LogInformation("{player} disconnected", playerLeft.Player.Name);
+                HandlePlayerLeft(message.PlayerLeft);
                 break;
             case ServerMessage.MessageOneofCase.SyncPlayers:
-                foreach (var player in message.SyncPlayers.Players)
-                {
-                    _players.AddOrUpdate(Guid.Parse(player.Id), _id => player, (_id, _player) => player);
-                }
+                HandleSyncPlayers(message.SyncPlayers);
                 break;
+            case ServerMessage.MessageOneofCase.PlayerUpdated:
+                HandlePlayerUpdated(message.PlayerUpdated);
+                break;
+        }
+    }
+
+    private void HandleChat(Chat chat)
+    {
+        _logger.LogInformation("{player}: {text}", chat.Player.Name, chat.Text);
+    }
+
+    private void HandlePlayerJoined(PlayerJoined playerJoined)
+    {
+        var player = playerJoined.Player;
+
+        if (_players.TryAdd(Guid.Parse(player.Id), player))
+        {
+            _logger.LogInformation("{player} connected", player.Name);
+        }
+    }
+
+    private void HandlePlayerLeft(PlayerLeft playerLeft)
+    {
+        _logger.LogInformation("{player} disconnected", playerLeft.Player.Name);
+    }
+
+    private void HandleSyncPlayers(SyncPlayers syncPlayers)
+    {
+        foreach (var player in syncPlayers.Players)
+        {
+            _players.AddOrUpdate(Guid.Parse(player.Id), _ => player, (_, _) => player);
+        }
+    }
+
+    private void HandlePlayerUpdated(PlayerUpdated playerUpdated)
+    {
+        var player = playerUpdated.Player;
+        var connectionId = Guid.Parse(player.Id);
+
+        if (_players.TryGetValue(connectionId, out var oldPlayer))
+        {
+            if (_players.TryUpdate(connectionId, player, oldPlayer))
+            {
+                _logger.LogInformation("{oldPlayer} changed name to {player}", oldPlayer.Name, player.Name);
+            }
         }
     }
 }

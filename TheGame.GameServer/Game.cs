@@ -66,6 +66,15 @@ public class Game
         _players.TryAdd(player.ConnectionId, player);
     }
 
+    public bool UpdatePlayer(Player player)
+    {
+        if (_players.TryGetValue(player.ConnectionId, out var oldPlayer))
+        {
+            return _players.TryUpdate(player.ConnectionId, player, oldPlayer);
+        }
+        return false;
+    }
+
     public Player? RemovePlayer(Guid id)
     {
         _players.Remove(id, out var player);

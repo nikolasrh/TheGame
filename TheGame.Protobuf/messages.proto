@@ -7,6 +7,7 @@ message ServerMessage {
     PlayerLeft player_left = 2;
     Chat chat = 3;
     SyncPlayers sync_players = 4;
+    PlayerUpdated player_updated = 5;
   }
 }
 
@@ -20,6 +21,10 @@ message PlayerJoined {
 }
 
 message PlayerLeft {
+  Player player = 1;
+}
+
+message PlayerUpdated {
   Player player = 1;
 }
 
@@ -37,6 +42,7 @@ message ClientMessage {
     JoinGame join_game = 1;
     LeaveGame leave_game = 2;
     SendChat send_chat = 3;
+    ChangeName change_name = 4;
   }
 }
 
@@ -49,4 +55,8 @@ message SendChat {
 }
 
 message LeaveGame {
+}
+
+message ChangeName {
+  string name = 1;
 }

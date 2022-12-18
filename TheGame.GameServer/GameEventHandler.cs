@@ -64,6 +64,9 @@ public class GameEventHandler
             case ClientMessage.MessageOneofCase.LeaveGame:
                 HandleLeaveGame(clientMessageEvent.connectionId);
                 break;
+            case ClientMessage.MessageOneofCase.ChangeName:
+                HandleChangeName(clientMessageEvent.connectionId, clientMessageEvent.message.ChangeName);
+                break;
             case ClientMessage.MessageOneofCase.SendChat:
                 HandleSendChat(clientMessageEvent.connectionId, clientMessageEvent.message.SendChat);
                 break;
@@ -115,6 +118,27 @@ public class GameEventHandler
     private void HandleLeaveGame(Guid connectionId)
     {
         _server.Disconnect(connectionId);
+    }
+
+    private void HandleChangeName(Guid connectionId, ChangeName changeName)
+    {
+        var updatedPlayer = new Player(connectionId, changeName.Name);
+        if (_game.UpdatePlayer(updatedPlayer))
+        {
+            var serverMessage = new ServerMessage
+            {
+                PlayerUpdated = new Protobuf.PlayerUpdated
+                {
+                    Player = new Protobuf.Player
+                    {
+                        Id = connectionId.ToString(),
+                        Name = changeName.Name
+                    }
+                }
+            };
+
+            _server.SendMessage(serverMessage);
+        }
     }
 
     private void HandleSendChat(Guid connectionId, SendChat sendChat)
