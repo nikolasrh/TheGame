@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 using Google.Protobuf;
 
 using TheGame.NetworkConnection;
@@ -7,12 +9,12 @@ namespace TheGame.GameClient;
 
 class ClientMessageSerializer : IMessageSerializer<ServerMessage, ClientMessage>
 {
-    public ServerMessage DeserializeIncomingMessage(byte[] message)
+    public ServerMessage DeserializeIncomingMessage(ReadOnlySpan<byte> message)
     {
         return ServerMessage.Parser.ParseFrom(message);
     }
 
-    public byte[] SerializeOutgoingMessage(ClientMessage message)
+    public ReadOnlySpan<byte> SerializeOutgoingMessage(ClientMessage message)
     {
         return message.ToByteArray();
     }

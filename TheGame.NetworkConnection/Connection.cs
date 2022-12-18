@@ -1,4 +1,3 @@
-using System.Buffers;
 using System.Net.Sockets;
 
 using Microsoft.Extensions.Logging;
@@ -7,6 +6,7 @@ namespace TheGame.NetworkConnection;
 
 public class Connection<TIncomingMessage, TOutgoingMessage>
 {
+    private const int PrefixBufferLength = 4;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly CancellationToken _cancellationToken;
     private readonly TcpClient _tcpClient;
@@ -46,13 +46,30 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
         try
         {
             var serializedMessage = _messageSerializer.SerializeOutgoingMessage(message);
-            var prefix = BitConverter.GetBytes(serializedMessage.Length);
-            var bytesWithPrefix = prefix.Concat(serializedMessage).ToArray();
-            _tcpClient.Client.Send(bytesWithPrefix); // TODO: Handle not all bytes being sent?
+
+            Span<byte> buffer = stackalloc byte[PrefixBufferLength + serializedMessage.Length];
+            var prefixBuffer = buffer.Slice(0, PrefixBufferLength);
+            var messageBuffer = buffer.Slice(PrefixBufferLength);
+
+            if (BitConverter.TryWriteBytes(prefixBuffer, serializedMessage.Length) && serializedMessage.TryCopyTo(messageBuffer))
+            {
+                var bytesSent = _tcpClient.Client.Send(buffer);
+
+                if (buffer.Length != bytesSent)
+                {
+                    _logger.LogError("Expected to send {0} bytes, but sent {1}", buffer.Length, bytesSent);
+                    Disconnect();
+                }
+            }
+            else
+            {
+                _logger.LogError("Error writing bytes to span");
+                Disconnect();
+            }
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error when writing to network stream");
+            _logger.LogError(e, "Error sending message");
             Disconnect();
         }
     }
@@ -70,22 +87,21 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
 
             if (NextIncomingMessageLength == 0)
             {
-                const int PrefixBufferLength = 4;
-                var prefixBuffer = new byte[PrefixBufferLength];
+                Span<byte> prefixBuffer = stackalloc byte[PrefixBufferLength];
 
-                var totalBytesReadToPrefixBuffer = _tcpClient.Client.Receive(prefixBuffer, 0, PrefixBufferLength, SocketFlags.None);
+                var totalBytesReadToPrefixBuffer = _tcpClient.Client.Receive(prefixBuffer);
 
                 if (totalBytesReadToPrefixBuffer == 0) return false;
 
                 NextIncomingMessageLength = BitConverter.ToInt32(prefixBuffer);
             }
 
-            var buffer = new byte[NextIncomingMessageLength];
-            var totalBytesReadToBuffer = _tcpClient.Client.Receive(buffer, 0, NextIncomingMessageLength, SocketFlags.None);
-
             // It could happen that we can only read the length prefix, and that the message is not available yet.
             // The next attempt will not read out a length prefix, but instead use the existing one.
-            if (totalBytesReadToBuffer == 0) return false;
+            if (_tcpClient.Client.Available == 0) return false;
+
+            Span<byte> buffer = stackalloc byte[NextIncomingMessageLength];
+            var totalBytesReadToBuffer = _tcpClient.Client.Receive(buffer);
 
             // Reset the length so that next attempt will read the length prefix.
             NextIncomingMessageLength = 0;

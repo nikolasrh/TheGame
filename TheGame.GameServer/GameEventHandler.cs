@@ -75,40 +75,35 @@ public class GameEventHandler
 
         if (newConnection is null) return;
 
+        var player = new Player(connectionId, joinGame.Name);
+        var protobufPlayer = PlayerToProtobufPlayer(player);
+
         var playerJoinedMessage = new ServerMessage
         {
             PlayerJoined = new Protobuf.PlayerJoined
             {
-                Player = new Protobuf.Player
-                {
-                    Id = connectionId.ToString(),
-                    Name = joinGame.Name
-                }
+                Player = protobufPlayer
             }
         };
 
         var existingPlayers = _game.GetPlayers();
 
-        foreach (var player in existingPlayers)
+        foreach (var existingPlayer in existingPlayers)
         {
-            _server.SendMessage(player.ConnectionId, playerJoinedMessage);
+            _server.SendMessage(existingPlayer.ConnectionId, playerJoinedMessage);
         }
 
+        _game.AddPlayer(player);
+
         var syncPlayers = new SyncPlayers();
-        syncPlayers.Players.AddRange(existingPlayers.Select(p => new Protobuf.Player
-        {
-            Id = p.ConnectionId.ToString(),
-            Name = p.Name
-        }));
+        syncPlayers.Players.Add(protobufPlayer);
+        syncPlayers.Players.AddRange(existingPlayers.Select(PlayerToProtobufPlayer));
         var syncPlayersMessage = new ServerMessage
         {
             SyncPlayers = syncPlayers
         };
 
         _server.SendMessage(connectionId, syncPlayersMessage);
-
-        var newPlayer = new Player(connectionId, joinGame.Name);
-        _game.AddPlayer(newPlayer);
     }
 
     private void HandleLeaveGame(Guid connectionId)
@@ -153,5 +148,14 @@ public class GameEventHandler
         };
 
         _server.SendMessage(serverMessage);
+    }
+
+    private Protobuf.Player PlayerToProtobufPlayer(Player player)
+    {
+        return new Protobuf.Player
+        {
+            Id = player.ConnectionId.ToString(),
+            Name = player.Name
+        };
     }
 }
