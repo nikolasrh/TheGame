@@ -6,8 +6,8 @@ message ServerMessage {
     PlayerJoined player_joined = 1;
     PlayerLeft player_left = 2;
     Chat chat = 3;
-    SyncPlayers sync_players = 4;
-    PlayerUpdated player_updated = 5;
+    PlayerUpdated player_updated = 4;
+    Welcome welcome = 5;
   }
 }
 
@@ -33,7 +33,12 @@ message Chat {
   string text = 2;
 }
 
-message SyncPlayers {
+message Welcome {
+  string player_id = 1;
+  GameState game_state = 2;
+}
+
+message GameState {
   repeated Player players = 1;
 }
 

@@ -11,6 +11,7 @@ public class ClientConnectionCallbacks : IConnectionCallbacks<ServerMessage>
 {
     private readonly ILogger _logger;
     private readonly ConcurrentDictionary<Guid, Protobuf.Player> _players = new();
+    private Guid PlayerId { get; set; }
 
     public ClientConnectionCallbacks(ILogger<ClientConnectionCallbacks> logger)
     {
@@ -35,8 +36,8 @@ public class ClientConnectionCallbacks : IConnectionCallbacks<ServerMessage>
             case ServerMessage.MessageOneofCase.PlayerLeft:
                 HandlePlayerLeft(message.PlayerLeft);
                 break;
-            case ServerMessage.MessageOneofCase.SyncPlayers:
-                HandleSyncPlayers(message.SyncPlayers);
+            case ServerMessage.MessageOneofCase.Welcome:
+                HandleWelcome(message.Welcome);
                 break;
             case ServerMessage.MessageOneofCase.PlayerUpdated:
                 HandlePlayerUpdated(message.PlayerUpdated);
@@ -70,9 +71,11 @@ public class ClientConnectionCallbacks : IConnectionCallbacks<ServerMessage>
         }
     }
 
-    private void HandleSyncPlayers(SyncPlayers syncPlayers)
+    private void HandleWelcome(Welcome welcome)
     {
-        foreach (var player in syncPlayers.Players)
+        PlayerId = Guid.Parse(welcome.PlayerId);
+
+        foreach (var player in welcome.GameState.Players)
         {
             _players.AddOrUpdate(Guid.Parse(player.Id), _ => player, (_, _) => player);
         }

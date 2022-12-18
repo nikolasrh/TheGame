@@ -39,7 +39,7 @@ public class GameEventHandler
 
         if (player is null) return;
 
-        var serverMessage = new ServerMessage
+        var playerLeftMessage = new ServerMessage
         {
             PlayerLeft = new Protobuf.PlayerLeft
             {
@@ -47,7 +47,7 @@ public class GameEventHandler
             }
         };
 
-        _server.SendMessage(serverMessage);
+        _server.SendMessage(playerLeftMessage);
     }
 
     public void HandleClientMessageEvent(ClientMessageEvent clientMessageEvent)
@@ -95,15 +95,20 @@ public class GameEventHandler
 
         _game.AddPlayer(player);
 
-        var syncPlayers = new SyncPlayers();
-        syncPlayers.Players.Add(protobufPlayer);
-        syncPlayers.Players.AddRange(existingPlayers.Select(PlayerToProtobufPlayer));
-        var syncPlayersMessage = new ServerMessage
+        var gameState = new GameState();
+        gameState.Players.Add(protobufPlayer);
+        gameState.Players.AddRange(existingPlayers.Select(PlayerToProtobufPlayer));
+
+        var welcomeMessage = new ServerMessage
         {
-            SyncPlayers = syncPlayers
+            Welcome = new Welcome
+            {
+                PlayerId = player.ConnectionId.ToString(),
+                GameState = gameState
+            }
         };
 
-        _server.SendMessage(connectionId, syncPlayersMessage);
+        _server.SendMessage(connectionId, welcomeMessage);
     }
 
     private void HandleLeaveGame(Guid connectionId)
@@ -116,9 +121,9 @@ public class GameEventHandler
         var updatedPlayer = new Player(connectionId, changeName.Name);
         if (_game.UpdatePlayer(updatedPlayer))
         {
-            var serverMessage = new ServerMessage
+            var playerUpdatedMessage = new ServerMessage
             {
-                PlayerUpdated = new Protobuf.PlayerUpdated
+                PlayerUpdated = new PlayerUpdated
                 {
                     Player = new Protobuf.Player
                     {
@@ -128,7 +133,7 @@ public class GameEventHandler
                 }
             };
 
-            _server.SendMessage(serverMessage);
+            _server.SendMessage(playerUpdatedMessage);
         }
     }
 
@@ -138,7 +143,7 @@ public class GameEventHandler
 
         if (player is null) return;
 
-        var serverMessage = new ServerMessage
+        var chatMessage = new ServerMessage
         {
             Chat = new Protobuf.Chat
             {
@@ -147,7 +152,7 @@ public class GameEventHandler
             }
         };
 
-        _server.SendMessage(serverMessage);
+        _server.SendMessage(chatMessage);
     }
 
     private Protobuf.Player PlayerToProtobufPlayer(Player player)
