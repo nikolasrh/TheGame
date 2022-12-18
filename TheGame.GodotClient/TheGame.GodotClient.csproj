@@ -1,0 +1,14 @@
+<Project Sdk="Godot.NET.Sdk/4.0.0-beta.8">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TheGame.Common\TheGame.Common.csproj" />
+    <ProjectReference Include="..\TheGame.NetworkConnection\TheGame.NetworkConnection.csproj" />
+    <ProjectReference Include="..\TheGame.Protobuf\TheGame.Protobuf.csproj" />
+  </ItemGroup>
+</Project>
