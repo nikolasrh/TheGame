@@ -37,17 +37,13 @@ public class GameEventHandler
         _game.RemoveNewConnection(connectionId);
         var player = _game.RemovePlayer(connectionId);
 
-        if (player == null) return;
+        if (player is null) return;
 
         var serverMessage = new ServerMessage
         {
             PlayerLeft = new Protobuf.PlayerLeft
             {
-                Player = new Protobuf.Player
-                {
-                    Id = player.Value.ConnectionId.ToString(),
-                    Name = player.Value.Name
-                }
+                PlayerId = player.Value.ConnectionId.ToString()
             }
         };
 
@@ -77,7 +73,7 @@ public class GameEventHandler
     {
         var newConnection = _game.RemoveNewConnection(connectionId);
 
-        if (newConnection == null) return;
+        if (newConnection is null) return;
 
         var playerJoinedMessage = new ServerMessage
         {
@@ -145,17 +141,13 @@ public class GameEventHandler
     {
         var player = _game.GetPlayer(connectionId);
 
-        if (player == null) return;
+        if (player is null) return;
 
         var serverMessage = new ServerMessage
         {
             Chat = new Protobuf.Chat
             {
-                Player = new Protobuf.Player
-                {
-                    Id = player.Value.ConnectionId.ToString(),
-                    Name = player.Value.Name
-                },
+                PlayerId = player.Value.ConnectionId.ToString(),
                 Text = sendChat.Text
             }
         };

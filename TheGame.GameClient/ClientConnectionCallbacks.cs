@@ -46,7 +46,10 @@ public class ClientConnectionCallbacks : IConnectionCallbacks<ServerMessage>
 
     private void HandleChat(Chat chat)
     {
-        _logger.LogInformation("{player}: {text}", chat.Player.Name, chat.Text);
+        if (_players.TryGetValue(Guid.Parse(chat.PlayerId), out var player))
+        {
+            _logger.LogInformation("{player}: {text}", player.Name, chat.Text);
+        }
     }
 
     private void HandlePlayerJoined(PlayerJoined playerJoined)
@@ -61,7 +64,10 @@ public class ClientConnectionCallbacks : IConnectionCallbacks<ServerMessage>
 
     private void HandlePlayerLeft(PlayerLeft playerLeft)
     {
-        _logger.LogInformation("{player} disconnected", playerLeft.Player.Name);
+        if (_players.TryGetValue(Guid.Parse(playerLeft.PlayerId), out var player))
+        {
+            _logger.LogInformation("{player} disconnected", player.Name);
+        }
     }
 
     private void HandleSyncPlayers(SyncPlayers syncPlayers)
