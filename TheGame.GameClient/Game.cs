@@ -32,7 +32,7 @@ public class Game
         });
         gameThread.Start();
 
-        while (!_connection.Disconnected)
+        while (true)
         {
             var message = Console.ReadLine() ?? string.Empty;
 
@@ -69,7 +69,7 @@ public class Game
             }
         };
 
-        _connection.SendMessage(joinGame);
+        SendMessage(joinGame);
     }
 
     private void SendLeaveGameMessage()
@@ -79,7 +79,7 @@ public class Game
             LeaveGame = new LeaveGame()
         };
 
-        _connection.SendMessage(leaveGame);
+        SendMessage(leaveGame);
     }
 
     private void SendChatMessage(string message)
@@ -92,7 +92,7 @@ public class Game
             }
         };
 
-        _connection.SendMessage(sendChat);
+        SendMessage(sendChat);
     }
 
     private void SendChangeNameMessage(string name)
@@ -105,6 +105,12 @@ public class Game
             }
         };
 
-        _connection.SendMessage(changeName);
+        SendMessage(changeName);
+    }
+
+    private void SendMessage(ClientMessage message)
+    {
+        _connection.QueueMessage(message);
+        _connection.SendQueuedMessages();
     }
 }

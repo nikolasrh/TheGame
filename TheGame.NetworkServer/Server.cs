@@ -97,16 +97,24 @@ public class Server<TIncomingMessage, TOutgoingMessage>
         }
     }
 
-    public void SendMessage(Guid connectionId, TOutgoingMessage message)
+    public void QueueMessage(Guid connectionId, TOutgoingMessage message)
     {
-        _connections[connectionId].SendMessage(message);
+        _connections[connectionId].QueueMessage(message);
     }
 
-    public void SendMessage(TOutgoingMessage message)
+    public void QueueMessage(TOutgoingMessage message)
     {
         foreach (var (_, connection) in _connections)
         {
-            connection.SendMessage(message);
+            connection.QueueMessage(message);
+        }
+    }
+
+    public void SendMessages()
+    {
+        foreach (var (_, connection) in _connections)
+        {
+            connection.SendQueuedMessages();
         }
     }
 

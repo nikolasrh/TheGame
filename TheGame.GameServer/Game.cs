@@ -45,6 +45,7 @@ public class Game
                 {
                     _gameEventHandler.HandleClientMessageEvent(clientMessageEvent);
                 }
+                _server.SendMessages();
             });
         });
         gameThread.Start();

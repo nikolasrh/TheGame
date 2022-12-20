@@ -47,7 +47,7 @@ public class GameEventHandler
             }
         };
 
-        _server.SendMessage(playerLeftMessage);
+        _server.QueueMessage(playerLeftMessage);
     }
 
     public void HandleClientMessageEvent(ClientMessageEvent clientMessageEvent)
@@ -90,7 +90,7 @@ public class GameEventHandler
 
         foreach (var existingPlayer in existingPlayers)
         {
-            _server.SendMessage(existingPlayer.ConnectionId, playerJoinedMessage);
+            _server.QueueMessage(existingPlayer.ConnectionId, playerJoinedMessage);
         }
 
         _game.AddPlayer(player);
@@ -108,7 +108,7 @@ public class GameEventHandler
             }
         };
 
-        _server.SendMessage(connectionId, welcomeMessage);
+        _server.QueueMessage(connectionId, welcomeMessage);
     }
 
     private void HandleLeaveGame(Guid connectionId)
@@ -133,7 +133,7 @@ public class GameEventHandler
                 }
             };
 
-            _server.SendMessage(playerUpdatedMessage);
+            _server.QueueMessage(playerUpdatedMessage);
         }
     }
 
@@ -152,7 +152,7 @@ public class GameEventHandler
             }
         };
 
-        _server.SendMessage(chatMessage);
+        _server.QueueMessage(chatMessage);
     }
 
     private Protobuf.Player PlayerToProtobufPlayer(Player player)

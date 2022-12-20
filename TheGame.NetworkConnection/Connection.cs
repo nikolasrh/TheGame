@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 
 using Microsoft.Extensions.Logging;
 
@@ -6,14 +7,16 @@ namespace TheGame.NetworkConnection;
 
 public class Connection<TIncomingMessage, TOutgoingMessage>
 {
-    private const int MaxStackAllocationSize = 256;
-    private const int PrefixBufferLength = 4;
-    private readonly CancellationTokenSource _cancellationTokenSource = new();
-    private readonly CancellationToken _cancellationToken;
+    private static int PrefixBufferLength = 4;
+    private static int BufferSize = 8192;
     private readonly TcpClient _tcpClient;
     private readonly IConnectionCallbacks<TIncomingMessage> _connectionCallbacks;
     private readonly IMessageSerializer<TIncomingMessage, TOutgoingMessage> _messageSerializer;
     private readonly ILogger _logger;
+    private readonly byte[] _messageBuffer = new byte[8192];
+    private bool Disconnected { get; set; } = false;
+    private int NextIncomingMessageLength { get; set; } = 0;
+    private int BufferPosition { get; set; } = 0;
 
     public Connection(
         IConnectionCallbacks<TIncomingMessage> connectionCallbacks,
@@ -21,8 +24,8 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
         TcpClient tcpClient,
         ILogger logger)
     {
-        tcpClient.ReceiveBufferSize = 8192;
-        tcpClient.SendBufferSize = 8192;
+        tcpClient.ReceiveBufferSize = BufferSize;
+        tcpClient.SendBufferSize = BufferSize;
 
         tcpClient.SendTimeout = 5000;
         tcpClient.NoDelay = true;
@@ -30,52 +33,54 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
         tcpClient.Client.NoDelay = true;
         tcpClient.Client.Blocking = false;
 
-        _cancellationToken = _cancellationTokenSource.Token;
         _tcpClient = tcpClient;
         _connectionCallbacks = connectionCallbacks;
         _messageSerializer = messageSerializer;
         _logger = logger;
     }
 
-    public bool Disconnected { get; private set; } = false;
-    private int NextIncomingMessageLength { get; set; } = 0;
+    public void SendQueuedMessages()
+    {
+        if (BufferPosition == 0) return;
 
-    public void SendMessage(TOutgoingMessage message)
+        Span<byte> buffer = _messageBuffer;
+        var bufferWithMessage = buffer.Slice(0, BufferPosition);
+
+        var bytesSent = _tcpClient.Client.Send(bufferWithMessage);
+
+        if (bytesSent < BufferPosition)
+        {
+            ReadOnlySpan<byte> remainingBuffer = bufferWithMessage.Slice(bytesSent);
+            remainingBuffer.CopyTo(buffer);
+            BufferPosition = BufferPosition - bytesSent;
+        }
+        BufferPosition = 0;
+    }
+
+    public void QueueMessage(TOutgoingMessage message)
     {
         if (Disconnected) return;
 
         try
         {
+            Span<byte> buffer = _messageBuffer;
             var messageSize = _messageSerializer.CalculateMessageSize(message);
-            var bufferSize = PrefixBufferLength + messageSize;
-            var allocateOnStack = bufferSize <= MaxStackAllocationSize;
-            Span<byte> buffer = allocateOnStack ? stackalloc byte[bufferSize] : new byte[bufferSize];
+            var totalSize = PrefixBufferLength + messageSize;
 
-            if (!allocateOnStack)
+            if (BufferPosition + totalSize > BufferSize)
             {
-                _logger.LogWarning("Allocating buffer on heap before sending message to socket");
-            }
-
-            var prefixBuffer = buffer.Slice(0, PrefixBufferLength);
-            var messageBuffer = buffer.Slice(PrefixBufferLength);
-
-            _messageSerializer.SerializeOutgoingMessage(message, messageBuffer);
-
-            if (BitConverter.TryWriteBytes(prefixBuffer, messageSize))
-            {
-                var bytesSent = _tcpClient.Client.Send(buffer);
-
-                if (buffer.Length != bytesSent)
-                {
-                    _logger.LogError("Expected to send {0} bytes, but sent {1}", buffer.Length, bytesSent);
-                    Disconnect();
-                }
-            }
-            else
-            {
-                _logger.LogError("Error writing bytes to span");
+                _logger.LogWarning("Message buffer is full, closing connection");
                 Disconnect();
+                return;
             }
+
+            var prefixBuffer = buffer.Slice(BufferPosition, PrefixBufferLength);
+            MemoryMarshal.Write(prefixBuffer, ref messageSize);
+            BufferPosition += PrefixBufferLength;
+
+            var messageBuffer = buffer.Slice(BufferPosition, messageSize);
+            _messageSerializer.SerializeOutgoingMessage(message, messageBuffer);
+            BufferPosition += messageSize;
         }
         catch (Exception e)
         {
@@ -103,12 +108,12 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
 
                 if (totalBytesReadToPrefixBuffer == 0) return false;
 
-                NextIncomingMessageLength = BitConverter.ToInt32(prefixBuffer);
+                NextIncomingMessageLength = MemoryMarshal.AsRef<int>(prefixBuffer);
             }
 
             // It could happen that we can only read the length prefix, and that the message is not available yet.
             // The next attempt will not read out a length prefix, but instead use the existing one.
-            if (_tcpClient.Client.Available == 0) return false;
+            if (_tcpClient.Client.Available < NextIncomingMessageLength) return false;
 
             Span<byte> buffer = stackalloc byte[NextIncomingMessageLength];
             var totalBytesReadToBuffer = _tcpClient.Client.Receive(buffer);
@@ -132,8 +137,6 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
         if (Disconnected) return;
 
         Disconnected = true;
-
-        _cancellationTokenSource.Cancel();
 
         try
         {
