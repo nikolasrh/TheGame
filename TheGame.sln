@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.NetworkServer", "Th
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Common", "TheGame.Common\TheGame.Common.csproj", "{D2257FCB-20B6-4FEE-99CD-E5FC5A3A4309}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Benchmark", "TheGame.Benchmark\TheGame.Benchmark.csproj", "{E4E79B29-E0A3-4BC7-AC3D-3B464D2EC8A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,5 +54,9 @@ Global
 		{D2257FCB-20B6-4FEE-99CD-E5FC5A3A4309}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2257FCB-20B6-4FEE-99CD-E5FC5A3A4309}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2257FCB-20B6-4FEE-99CD-E5FC5A3A4309}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4E79B29-E0A3-4BC7-AC3D-3B464D2EC8A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4E79B29-E0A3-4BC7-AC3D-3B464D2EC8A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4E79B29-E0A3-4BC7-AC3D-3B464D2EC8A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4E79B29-E0A3-4BC7-AC3D-3B464D2EC8A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
