@@ -7,15 +7,20 @@ using TheGame.Protobuf;
 
 namespace TheGame.GameClient;
 
-class ClientMessageSerializer : IMessageSerializer<ServerMessage, ClientMessage>
+public class ClientMessageSerializer : IMessageSerializer<ServerMessage, ClientMessage>
 {
+    public int CalculateMessageSize(ClientMessage message)
+    {
+        return message.CalculateSize();
+    }
+
     public ServerMessage DeserializeIncomingMessage(ReadOnlySpan<byte> message)
     {
         return ServerMessage.Parser.ParseFrom(message);
     }
 
-    public ReadOnlySpan<byte> SerializeOutgoingMessage(ClientMessage message)
+    public void SerializeOutgoingMessage(ClientMessage message, Span<byte> buffer)
     {
-        return message.ToByteArray();
+        message.WriteTo(buffer);
     }
 }

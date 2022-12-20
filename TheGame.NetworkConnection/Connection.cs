@@ -6,6 +6,7 @@ namespace TheGame.NetworkConnection;
 
 public class Connection<TIncomingMessage, TOutgoingMessage>
 {
+    private const int MaxStackAllocationSize = 256;
     private const int PrefixBufferLength = 4;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly CancellationToken _cancellationToken;
@@ -45,13 +46,22 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
 
         try
         {
-            var serializedMessage = _messageSerializer.SerializeOutgoingMessage(message);
+            var messageSize = _messageSerializer.CalculateMessageSize(message);
+            var bufferSize = PrefixBufferLength + messageSize;
+            var allocateOnStack = bufferSize <= MaxStackAllocationSize;
+            Span<byte> buffer = allocateOnStack ? stackalloc byte[bufferSize] : new byte[bufferSize];
 
-            Span<byte> buffer = stackalloc byte[PrefixBufferLength + serializedMessage.Length];
+            if (!allocateOnStack)
+            {
+                _logger.LogWarning("Allocating buffer on heap before sending message to socket");
+            }
+
             var prefixBuffer = buffer.Slice(0, PrefixBufferLength);
             var messageBuffer = buffer.Slice(PrefixBufferLength);
 
-            if (BitConverter.TryWriteBytes(prefixBuffer, serializedMessage.Length) && serializedMessage.TryCopyTo(messageBuffer))
+            _messageSerializer.SerializeOutgoingMessage(message, messageBuffer);
+
+            if (BitConverter.TryWriteBytes(prefixBuffer, messageSize))
             {
                 var bytesSent = _tcpClient.Client.Send(buffer);
 
