@@ -5,7 +5,7 @@ using Google.Protobuf;
 using TheGame.NetworkConnection;
 using TheGame.Protobuf;
 
-namespace TheGame.GameClient;
+namespace TheGame.ConsoleClient;
 
 public class ClientMessageSerializer : IMessageSerializer<ServerMessage, ClientMessage>
 {

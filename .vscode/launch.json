@@ -15,9 +15,9 @@
       "request": "launch",
       //"preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/TheGame.GameClient/bin/Debug/net7.0/TheGame.GameClient.dll",
+      "program": "${workspaceFolder}/TheGame.ConsoleClient/bin/Debug/net7.0/TheGame.ConsoleClient.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/TheGame.GameClient",
+      "cwd": "${workspaceFolder}/TheGame.ConsoleClient",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
       "console": "internalConsole",
       "stopAtEntry": false
