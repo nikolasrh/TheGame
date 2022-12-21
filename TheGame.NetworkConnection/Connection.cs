@@ -36,10 +36,10 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
         _logger = logger;
     }
 
-    public delegate void DisconnectedHandler();
-    public delegate void MessageReceivedHandler(TIncomingMessage message);
-    public event DisconnectedHandler? Disconnected;
-    public event MessageReceivedHandler? MessageReceived;
+    public delegate void DisconnectedEventHandler();
+    public delegate void MessageReceivedEventHandler(TIncomingMessage message);
+    public event DisconnectedEventHandler? Disconnected;
+    public event MessageReceivedEventHandler? MessageReceived;
 
     public void SendQueuedMessages()
     {
