@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.GameServer", "TheGame.GameServer\TheGame.GameServer.csproj", "{80023C66-01E2-439B-AD4F-72A06364D378}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.GameClient", "TheGame.GameClient\TheGame.GameClient.csproj", "{AB4BC6A5-8BFA-44D0-BE4B-DB52D48D3A3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.ConsoleClient", "TheGame.ConsoleClient\TheGame.ConsoleClient.csproj", "{AB4BC6A5-8BFA-44D0-BE4B-DB52D48D3A3B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Protobuf", "TheGame.Protobuf\TheGame.Protobuf.csproj", "{692EE71C-7681-4D78-9E8F-13F175D127C1}"
 EndProject

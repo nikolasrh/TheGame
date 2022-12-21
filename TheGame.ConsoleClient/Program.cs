@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
 
 using TheGame.Common;
-using TheGame.GameClient;
+using TheGame.ConsoleClient;
 using TheGame.NetworkConnection;
 using TheGame.Protobuf;
 

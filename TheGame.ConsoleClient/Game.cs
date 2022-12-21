@@ -6,7 +6,7 @@ using TheGame.Common;
 using TheGame.NetworkConnection;
 using TheGame.Protobuf;
 
-namespace TheGame.GameClient;
+namespace TheGame.ConsoleClient;
 
 public class Game
 {
