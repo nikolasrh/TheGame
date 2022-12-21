@@ -6,7 +6,6 @@ public class Loop
 {
     private readonly TimeSpan _delayBetweenTicks;
     private readonly ILogger _logger;
-    private bool Exiting { get; set; }
 
     public Loop(LoopOptions options, ILogger<Loop> logger)
     {
@@ -14,11 +13,13 @@ public class Loop
         _logger = logger;
     }
 
+    public bool Running { get; private set; } = true;
+
     public void Run(Action<TimeSpan> update)
     {
         var prev = DateTime.Now - _delayBetweenTicks;
 
-        while (!Exiting)
+        while (Running)
         {
             var next = prev + _delayBetweenTicks + _delayBetweenTicks;
             var delta = DateTime.Now - prev;
@@ -34,7 +35,7 @@ public class Loop
 
     public void Exit()
     {
-        Exiting = true;
+        Running = false;
     }
 
     private void Delay(DateTime next)

@@ -7,7 +7,7 @@ public partial class NameDialogPanel : Panel
     private LineEdit _inputField;
 
     [Signal]
-    public delegate void NameSubmittedEventHandler(string text);
+    public delegate void NameSubmittedEventHandler(string name);
 
     public override void _Ready()
     {
