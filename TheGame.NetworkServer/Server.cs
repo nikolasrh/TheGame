@@ -29,12 +29,12 @@ public class Server<TIncomingMessage, TOutgoingMessage>
         _logger = logger;
     }
 
-    public delegate void ConnectionOpenedHandler(Guid connectionId);
-    public delegate void ConnectionClosedHandler(Guid connectionId);
-    public delegate void MessageReceivedHandler(Guid connectionId, TIncomingMessage message);
-    public event ConnectionOpenedHandler? ConnectionOpened;
-    public event ConnectionClosedHandler? ConnectionClosed;
-    public event MessageReceivedHandler? MessageReceived;
+    public delegate void ConnectionOpenedEventHandler(Guid connectionId);
+    public delegate void ConnectionClosedEventHandler(Guid connectionId);
+    public delegate void MessageReceivedEventHandler(Guid connectionId, TIncomingMessage message);
+    public event ConnectionOpenedEventHandler? ConnectionOpened;
+    public event ConnectionClosedEventHandler? ConnectionClosed;
+    public event MessageReceivedEventHandler? MessageReceived;
 
     public void Start(Loop loop)
     {
