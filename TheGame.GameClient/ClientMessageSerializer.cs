@@ -1,11 +1,9 @@
-using System.Runtime.InteropServices;
-
 using Google.Protobuf;
 
 using TheGame.NetworkConnection;
 using TheGame.Protobuf;
 
-namespace TheGame.ConsoleClient;
+namespace TheGame.GameClient;
 
 public class ClientMessageSerializer : IMessageSerializer<ServerMessage, ClientMessage>
 {

@@ -6,6 +6,7 @@ using Godot;
 using Microsoft.Extensions.Logging;
 
 using TheGame.Common;
+using TheGame.GameClient;
 using TheGame.GodotClient.Chat;
 using TheGame.GodotClient.NameDialog;
 using TheGame.NetworkConnection;
@@ -44,15 +45,20 @@ public partial class Main : Control
         };
 
         var nameDialog = GetNode<NameDialogPanel>("NameDialog");
-        nameDialog.NameSubmitted += game.JoinGame;
+        nameDialog.NameSubmitted += name => game.JoinGame(name);
 
-        game.PlayerJoinedEvent += player => chat.AddMessage($"{player.Name} joined");
-        game.PlayerLeftEvent += player => chat.AddMessage($"{player.Name} left");
-        game.PlayerUpdated += (oldPlayer, newPlayer) => chat.AddMessage($"{oldPlayer.Name} changed name to {newPlayer.Name}");
+        game.PlayerJoined += player => chat.AddMessage($"{player.Name} joined");
+        game.PlayerLeft += player => chat.AddMessage($"{player.Name} left");
+        game.PlayerUpdated += (oldPlayer, newPlayer) =>
+        {
+            if (oldPlayer.Name != newPlayer.Name)
+            {
+                chat.AddMessage($"{oldPlayer.Name} changed name to {newPlayer.Name}");
+            }
+        };
         game.ChatMesageReceived += (player, message) => chat.AddMessage($"{player.Name}: {message}");
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
     }

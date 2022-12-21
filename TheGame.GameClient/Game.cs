@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Concurrent;
-using System.Threading;
 
 using Microsoft.Extensions.Logging;
 
@@ -8,7 +6,7 @@ using TheGame.Common;
 using TheGame.NetworkConnection;
 using TheGame.Protobuf;
 
-namespace TheGame.GodotClient;
+namespace TheGame.GameClient;
 
 public class Game
 {
@@ -23,6 +21,17 @@ public class Game
         _connection = connection;
         _logger = logger;
     }
+
+    public delegate void ChatMessageReceivedEventHandler(Player player, string message);
+    public delegate void PlayerJoinedEventHandler(Player player);
+    public delegate void PlayerLeftEventHandler(Player player);
+    public delegate void PlayerUpdatedEventHandler(Player oldPlayer, Player newPlayer);
+    public event ChatMessageReceivedEventHandler? ChatMesageReceived;
+    public event PlayerJoinedEventHandler? PlayerJoined;
+    public event PlayerLeftEventHandler? PlayerLeft;
+    public event PlayerUpdatedEventHandler? PlayerUpdated;
+
+    public bool Running { get { return _loop.Running; } }
 
     public void Start()
     {
@@ -47,7 +56,7 @@ public class Game
             }
         };
 
-        SendMessage(joinGame);
+        SendClientMessage(joinGame);
     }
 
     public void LeaveGame()
@@ -57,7 +66,7 @@ public class Game
             LeaveGame = new LeaveGame()
         };
 
-        SendMessage(leaveGame);
+        SendClientMessage(leaveGame);
 
         _connection.Disconnect();
     }
@@ -72,7 +81,7 @@ public class Game
             }
         };
 
-        SendMessage(sendChat);
+        SendClientMessage(sendChat);
     }
 
     public void ChangeName(string name)
@@ -85,10 +94,10 @@ public class Game
             }
         };
 
-        SendMessage(changeName);
+        SendClientMessage(changeName);
     }
 
-    private void SendMessage(ClientMessage message)
+    private void SendClientMessage(ClientMessage message)
     {
         _connection.QueueMessage(message);
         _connection.SendQueuedMessages();
@@ -116,16 +125,6 @@ public class Game
         }
     }
 
-    public delegate void ChatMessageReceivedEventHandler(Player player, string message);
-    public delegate void PlayerJoinedEventHandler(Player player);
-    public delegate void PlayerLeftEventHandler(Player player);
-    public delegate void PlayerUpdatedEventHandler(Player oldPlayer, Player newPlayer);
-    public event ChatMessageReceivedEventHandler ChatMesageReceived;
-    public event PlayerJoinedEventHandler PlayerJoinedEvent;
-    public event PlayerLeftEventHandler PlayerLeftEvent;
-    public event PlayerUpdatedEventHandler PlayerUpdated;
-
-
     private void HandleChat(Protobuf.Chat chat)
     {
         if (_players.TryGetValue(Guid.Parse(chat.PlayerId), out var player))
@@ -140,7 +139,7 @@ public class Game
 
         if (_players.TryAdd(Guid.Parse(player.Id), player))
         {
-            PlayerJoinedEvent?.Invoke(player);
+            PlayerJoined?.Invoke(player);
         }
     }
 
@@ -148,7 +147,7 @@ public class Game
     {
         if (_players.TryGetValue(Guid.Parse(playerLeft.PlayerId), out var player))
         {
-            PlayerLeftEvent?.Invoke(player);
+            PlayerLeft?.Invoke(player);
         }
     }
 
