@@ -15,25 +15,26 @@ public class Server<TIncomingMessage, TOutgoingMessage>
     private readonly IPAddress _ip;
     private readonly int _port;
     private readonly IMessageSerializer<TIncomingMessage, TOutgoingMessage> _messageSerializer;
-    private readonly IServerCallbacks<TIncomingMessage> _serverCallbacks;
-    private readonly ServerConnectionCallbacksFactory<TIncomingMessage> _serverConnectionCallbacksFactory;
     private readonly ILogger _logger;
 
     public Server(
         IPAddress ip,
         int port,
         IMessageSerializer<TIncomingMessage, TOutgoingMessage> messageSerializer,
-        IServerCallbacks<TIncomingMessage> serverCallbacks,
-        ServerConnectionCallbacksFactory<TIncomingMessage> serverConnectionCallbacksFactory,
         ILogger<Server<TIncomingMessage, TOutgoingMessage>> logger)
     {
         _ip = ip;
         _port = port;
         _messageSerializer = messageSerializer;
-        _serverCallbacks = serverCallbacks;
-        _serverConnectionCallbacksFactory = serverConnectionCallbacksFactory;
         _logger = logger;
     }
+
+    public delegate void ConnectionOpenedHandler(Guid connectionId);
+    public delegate void ConnectionClosedHandler(Guid connectionId);
+    public delegate void MessageReceivedHandler(Guid connectionId, TIncomingMessage message);
+    public event ConnectionOpenedHandler? ConnectionOpened;
+    public event ConnectionClosedHandler? ConnectionClosed;
+    public event MessageReceivedHandler? MessageReceived;
 
     public void Start(Loop loop)
     {
@@ -58,12 +59,15 @@ public class Server<TIncomingMessage, TOutgoingMessage>
                 var client = listener.AcceptTcpClient();
 
                 var connectionId = Guid.NewGuid();
-                var connectionCallbacks = _serverConnectionCallbacksFactory.Create(connectionId);
-                var connection = new Connection<TIncomingMessage, TOutgoingMessage>(connectionCallbacks, _messageSerializer, client, _logger);
+
+                var connection = new Connection<TIncomingMessage, TOutgoingMessage>(_messageSerializer, client, _logger);
+
+                connection.Disconnected += () => ConnectionClosed?.Invoke(connectionId);
+                connection.MessageReceived += message => MessageReceived?.Invoke(connectionId, message);
 
                 if (_connections.TryAdd(connectionId, connection))
                 {
-                    _serverCallbacks.OnConnection(connectionId);
+                    ConnectionOpened?.Invoke(connectionId);
                     _logger.LogInformation("Started connection {0}", connectionId);
                 }
                 else

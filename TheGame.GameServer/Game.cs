@@ -33,6 +33,10 @@ public class Game
 
     public void Start(Loop loop)
     {
+        _server.ConnectionOpened += ConnectionOpened;
+        _server.ConnectionClosed += ConnectionClosed;
+        _server.MessageReceived += MessageReceived;
+
         var gameThread = new Thread(() =>
         {
             loop.Run(_ =>
@@ -91,5 +95,20 @@ public class Game
     public Player[] GetPlayers()
     {
         return _players.Select(x => x.Value).ToArray();
+    }
+
+    private void ConnectionOpened(Guid connectionId)
+    {
+        _connectionEventQueue.Enqueue(new ConnectionEvent(connectionId, ConnectionEventType.CONNECT));
+    }
+
+    private void ConnectionClosed(Guid connectionId)
+    {
+        _connectionEventQueue.Enqueue(new ConnectionEvent(connectionId, ConnectionEventType.DISCONNECT));
+    }
+
+    private void MessageReceived(Guid connectionId, ClientMessage message)
+    {
+        _clientMessageEventQueue.Enqueue(new ClientMessageEvent(connectionId, message));
     }
 }

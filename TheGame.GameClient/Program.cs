@@ -18,10 +18,7 @@ var clientMessageSerializer = new ClientMessageSerializer();
 var client = new TcpClient();
 client.Connect(new IPEndPoint(IPAddress.Loopback, 6000));
 
-var clientConnectionCallbacks = new ClientConnectionCallbacks(loggerFactory.CreateLogger<ClientConnectionCallbacks>());
-
 var connection = new Connection<ServerMessage, ClientMessage>(
-    clientConnectionCallbacks,
     clientMessageSerializer,
     client,
     loggerFactory.CreateLogger<Connection<ServerMessage, ClientMessage>>());
