@@ -10,16 +10,14 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
     private static int PrefixBufferLength = 4;
     private static int BufferSize = 8192;
     private readonly TcpClient _tcpClient;
-    private readonly IConnectionCallbacks<TIncomingMessage> _connectionCallbacks;
     private readonly IMessageSerializer<TIncomingMessage, TOutgoingMessage> _messageSerializer;
     private readonly ILogger _logger;
     private readonly byte[] _messageBuffer = new byte[8192];
-    private bool Disconnected { get; set; } = false;
-    private int NextIncomingMessageLength { get; set; } = 0;
-    private int BufferPosition { get; set; } = 0;
+    private bool _disconnected = false;
+    private int _nextIncomingMessageLength = 0;
+    private int _bufferPosition = 0;
 
     public Connection(
-        IConnectionCallbacks<TIncomingMessage> connectionCallbacks,
         IMessageSerializer<TIncomingMessage, TOutgoingMessage> messageSerializer,
         TcpClient tcpClient,
         ILogger logger)
@@ -34,32 +32,36 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
         tcpClient.Client.Blocking = false;
 
         _tcpClient = tcpClient;
-        _connectionCallbacks = connectionCallbacks;
         _messageSerializer = messageSerializer;
         _logger = logger;
     }
 
+    public delegate void DisconnectedHandler();
+    public delegate void MessageReceivedHandler(TIncomingMessage message);
+    public event DisconnectedHandler? Disconnected;
+    public event MessageReceivedHandler? MessageReceived;
+
     public void SendQueuedMessages()
     {
-        if (BufferPosition == 0) return;
+        if (_bufferPosition == 0) return;
 
         Span<byte> buffer = _messageBuffer;
-        var bufferWithMessage = buffer.Slice(0, BufferPosition);
+        var bufferWithMessage = buffer.Slice(0, _bufferPosition);
 
         var bytesSent = _tcpClient.Client.Send(bufferWithMessage);
 
-        if (bytesSent < BufferPosition)
+        if (bytesSent < _bufferPosition)
         {
             ReadOnlySpan<byte> remainingBuffer = bufferWithMessage.Slice(bytesSent);
             remainingBuffer.CopyTo(buffer);
-            BufferPosition = BufferPosition - bytesSent;
+            _bufferPosition = _bufferPosition - bytesSent;
         }
-        BufferPosition = 0;
+        _bufferPosition = 0;
     }
 
     public void QueueMessage(TOutgoingMessage message)
     {
-        if (Disconnected) return;
+        if (_disconnected) return;
 
         try
         {
@@ -67,20 +69,20 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
             var messageSize = _messageSerializer.CalculateMessageSize(message);
             var totalSize = PrefixBufferLength + messageSize;
 
-            if (BufferPosition + totalSize > BufferSize)
+            if (_bufferPosition + totalSize > BufferSize)
             {
                 _logger.LogWarning("Message buffer is full, closing connection");
                 Disconnect();
                 return;
             }
 
-            var prefixBuffer = buffer.Slice(BufferPosition, PrefixBufferLength);
+            var prefixBuffer = buffer.Slice(_bufferPosition, PrefixBufferLength);
             MemoryMarshal.Write(prefixBuffer, ref messageSize);
-            BufferPosition += PrefixBufferLength;
+            _bufferPosition += PrefixBufferLength;
 
-            var messageBuffer = buffer.Slice(BufferPosition, messageSize);
+            var messageBuffer = buffer.Slice(_bufferPosition, messageSize);
             _messageSerializer.SerializeOutgoingMessage(message, messageBuffer);
-            BufferPosition += messageSize;
+            _bufferPosition += messageSize;
         }
         catch (Exception e)
         {
@@ -98,9 +100,9 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
     {
         try
         {
-            if (Disconnected || _tcpClient.Client.Available == 0) return false;
+            if (_disconnected || _tcpClient.Client.Available == 0) return false;
 
-            if (NextIncomingMessageLength == 0)
+            if (_nextIncomingMessageLength == 0)
             {
                 Span<byte> prefixBuffer = stackalloc byte[PrefixBufferLength];
 
@@ -108,20 +110,21 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
 
                 if (totalBytesReadToPrefixBuffer == 0) return false;
 
-                NextIncomingMessageLength = MemoryMarshal.AsRef<int>(prefixBuffer);
+                _nextIncomingMessageLength = MemoryMarshal.AsRef<int>(prefixBuffer);
             }
 
             // It could happen that we can only read the length prefix, and that the message is not available yet.
             // The next attempt will not read out a length prefix, but instead use the existing one.
-            if (_tcpClient.Client.Available < NextIncomingMessageLength) return false;
+            if (_tcpClient.Client.Available < _nextIncomingMessageLength) return false;
 
-            Span<byte> buffer = stackalloc byte[NextIncomingMessageLength];
+            Span<byte> buffer = stackalloc byte[_nextIncomingMessageLength];
             var totalBytesReadToBuffer = _tcpClient.Client.Receive(buffer);
 
             // Reset the length so that next attempt will read the length prefix.
-            NextIncomingMessageLength = 0;
+            _nextIncomingMessageLength = 0;
             var message = _messageSerializer.DeserializeIncomingMessage(buffer);
-            _connectionCallbacks.OnMessage(message);
+
+            MessageReceived?.Invoke(message);
             return true;
         }
         catch (Exception e)
@@ -134,9 +137,9 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
 
     public void Disconnect()
     {
-        if (Disconnected) return;
+        if (_disconnected) return;
 
-        Disconnected = true;
+        _disconnected = true;
 
         try
         {
@@ -147,6 +150,6 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
             _logger.LogError(e, "Error when closing tcp client");
         }
 
-        _connectionCallbacks.OnDisconnect();
+        Disconnected?.Invoke();
     }
 }
