@@ -10,49 +10,50 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -130.0
-offset_top = -157.0
-offset_right = 130.0
-offset_bottom = 157.0
+offset_left = -122.0
+offset_top = -156.0
+offset_right = 122.0
+offset_bottom = 156.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+theme_override_constants/separation = 32
 script = ExtResource("1_f27ba")
 
-[node name="Hostname" parent="." instance=ExtResource("1_2mgdy")]
-offset_right = 260.0
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 8
+
+[node name="HostnameInput" parent="VBoxContainer" instance=ExtResource("1_2mgdy")]
+layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 _label = "Hostname"
 Value = "localhost"
 
-[node name="Port" parent="." instance=ExtResource("2_a25cj")]
-offset_top = 81.0
-offset_right = 260.0
-offset_bottom = 158.0
+[node name="PortInput" parent="VBoxContainer" instance=ExtResource("2_a25cj")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 _label = "Port"
 Value = 6000
 
-[node name="PlayerName" parent="." instance=ExtResource("1_2mgdy")]
-offset_top = 162.0
-offset_right = 260.0
-offset_bottom = 239.0
+[node name="PlayerNameInput" parent="VBoxContainer" instance=ExtResource("1_2mgdy")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 _label = "Player name"
 Value = "Godot"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-offset_top = 243.0
-offset_right = 260.0
-offset_bottom = 314.0
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="Button" type="Button" parent="MarginContainer"]
-offset_left = 8.0
-offset_top = 32.0
-offset_right = 252.0
-offset_bottom = 63.0
+[node name="ConnectButton" type="Button" parent="."]
+layout_mode = 2
+size_flags_vertical = 4
 text = "Connect"
+
+[node name="ErrorMessage" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Could not connect to server."
