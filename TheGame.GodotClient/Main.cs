@@ -1,16 +1,8 @@
-using System.Net;
-using System.Net.Sockets;
-
 using Godot;
 
-using Microsoft.Extensions.Logging;
-
-using TheGame.Common;
-using TheGame.GameClient;
 using TheGame.GodotClient.Chat;
 using TheGame.GodotClient.NameDialog;
-using TheGame.NetworkConnection;
-using TheGame.Protobuf;
+
 
 namespace TheGame.GodotClient;
 
@@ -18,8 +10,7 @@ public partial class Main : Control
 {
     public override void _Ready()
     {
-        var game = StartGame();
-
+        var game = GetNode<GameNode>("/root/GameNode").Game;
         var chat = GetNode<ChatPanel>("Chat");
 
         chat.ChatMessageSubmitted += (message) =>
@@ -27,10 +18,9 @@ public partial class Main : Control
             const string EXIT_COMMAND = "/exit";
             const string NAME_COMMAND = "/name ";
 
-
             if (message == EXIT_COMMAND)
             {
-                game.LeaveGame();
+                game.Disconnect();
             }
             else if (message.StartsWith(NAME_COMMAND))
             {
@@ -45,7 +35,13 @@ public partial class Main : Control
         };
 
         var nameDialog = GetNode<NameDialogPanel>("NameDialog");
-        nameDialog.NameSubmitted += name => game.JoinGame(name);
+        nameDialog.NameSubmitted += name =>
+        {
+            if (game.Connect("localhost", 6000))
+            {
+                game.JoinGame(name);
+            }
+        };
 
         game.PlayerJoined += player => chat.AddMessage($"{player.Name} joined");
         game.PlayerLeft += player => chat.AddMessage($"{player.Name} left");
@@ -61,30 +57,5 @@ public partial class Main : Control
 
     public override void _Process(double delta)
     {
-    }
-
-    public Game StartGame()
-    {
-        // TODO: Create logger using GD.Print
-        var loggerFactory = LoggerFactory.Create(builder =>
-        {
-            builder.AddConsole();
-        });
-
-        var clientMessageSerializer = new ClientMessageSerializer();
-
-        var client = new TcpClient();
-        client.Connect(new IPEndPoint(IPAddress.Loopback, 6000));
-
-        var connection = new Connection<ServerMessage, ClientMessage>(
-            clientMessageSerializer,
-            client,
-            loggerFactory.CreateLogger<Connection<ServerMessage, ClientMessage>>());
-
-        var loop = new Loop(new LoopOptions(10), loggerFactory.CreateLogger<Loop>());
-
-        var game = new Game(loop, connection, loggerFactory.CreateLogger<Game>());
-        game.Start();
-        return game;
     }
 }

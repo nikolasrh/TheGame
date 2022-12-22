@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 
 using Microsoft.Extensions.Logging;
 
@@ -14,14 +13,9 @@ var loggerFactory = LoggerFactory.Create(builder =>
 });
 var logger = loggerFactory.CreateLogger<Program>();
 
-var clientMessageSerializer = new ClientMessageSerializer();
-
-var client = new TcpClient();
-client.Connect(new IPEndPoint(IPAddress.Loopback, 6000));
-
 var connection = new Connection<ServerMessage, ClientMessage>(
-    clientMessageSerializer,
-    client,
+    new ClientMessageSerializer(),
+    new TcpClient(),
     loggerFactory.CreateLogger<Connection<ServerMessage, ClientMessage>>());
 
 var loop = new Loop(new LoopOptions(10), loggerFactory.CreateLogger<Loop>());
@@ -48,20 +42,24 @@ game.PlayerUpdated += (oldPlayer, newPlayer) =>
 Console.Write("Name: ");
 var playerName = Console.ReadLine() ?? string.Empty;
 
-game.Start();
+if (!game.Connect("localhost", 6000)) return;
+
+logger.LogInformation("Connected!");
+
 game.JoinGame(playerName);
 
 const string EXIT_COMMAND = "/exit";
 const string NAME_COMMAND = "/name ";
 const int NAME_COMMAND_LENGTH = 6;
 
-while (game.Running)
+while (game.Connected)
 {
     var message = Console.ReadLine() ?? string.Empty;
 
     if (message == EXIT_COMMAND)
     {
-        game.LeaveGame();
+        game.Disconnect();
+        break;
     }
     else if (message.StartsWith(NAME_COMMAND))
     {

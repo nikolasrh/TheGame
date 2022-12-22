@@ -14,12 +14,20 @@ public class Game
     private readonly Loop _loop;
     private readonly Connection<ServerMessage, ClientMessage> _connection;
     private readonly ILogger _logger;
+    private readonly Thread _backgroundThread;
 
     public Game(Loop loop, Connection<ServerMessage, ClientMessage> connection, ILogger<Game> logger)
     {
         _loop = loop;
         _connection = connection;
         _logger = logger;
+        _connection.MessageReceived += MessageHandler;
+
+        _backgroundThread = new Thread(() =>
+        {
+            _loop.Run(_ => _connection.HandleIncomingMessages());
+        });
+        _backgroundThread.IsBackground = true;
     }
 
     public delegate void ChatMessageReceivedEventHandler(Player player, string message);
@@ -31,20 +39,31 @@ public class Game
     public event PlayerLeftEventHandler? PlayerLeft;
     public event PlayerUpdatedEventHandler? PlayerUpdated;
 
-    public bool Running { get { return _loop.Running; } }
+    public bool Connected { get => _connection.Connected; }
 
-    public void Start()
+    public bool Connect(string hostname, int port)
     {
-        _connection.Disconnected += _loop.Exit;
-        _connection.MessageReceived += MessageHandler;
+        if (!_connection.Connect(hostname, port)) return false;
 
-        var gameThread = new Thread(() =>
+        if (_backgroundThread.ThreadState.HasFlag(ThreadState.Unstarted))
         {
-            _loop.Run(_ => _connection.HandleIncomingMessages());
-        });
-        gameThread.Start();
+            _backgroundThread.Start();
+        }
+
+        return true;
     }
 
+    public void Disconnect()
+    {
+        var leaveGame = new ClientMessage
+        {
+            LeaveGame = new LeaveGame()
+        };
+
+        SendClientMessage(leaveGame);
+
+        _connection.Disconnect();
+    }
 
     public void JoinGame(string name)
     {
@@ -57,18 +76,6 @@ public class Game
         };
 
         SendClientMessage(joinGame);
-    }
-
-    public void LeaveGame()
-    {
-        var leaveGame = new ClientMessage
-        {
-            LeaveGame = new LeaveGame()
-        };
-
-        SendClientMessage(leaveGame);
-
-        _connection.Disconnect();
     }
 
     public void SendChatMessage(string message)

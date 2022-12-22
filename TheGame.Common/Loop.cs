@@ -13,13 +13,11 @@ public class Loop
         _logger = logger;
     }
 
-    public bool Running { get; private set; } = true;
-
     public void Run(Action<TimeSpan> update)
     {
         var prev = DateTime.Now - _delayBetweenTicks;
 
-        while (Running)
+        while (true)
         {
             var next = prev + _delayBetweenTicks + _delayBetweenTicks;
             var delta = DateTime.Now - prev;
@@ -31,11 +29,6 @@ public class Loop
 
             Delay(next);
         }
-    }
-
-    public void Exit()
-    {
-        Running = false;
     }
 
     private void Delay(DateTime next)

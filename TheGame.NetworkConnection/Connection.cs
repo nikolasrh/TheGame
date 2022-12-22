@@ -13,7 +13,6 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
     private readonly IMessageSerializer<TIncomingMessage, TOutgoingMessage> _messageSerializer;
     private readonly ILogger _logger;
     private readonly byte[] _messageBuffer = new byte[8192];
-    private bool _disconnected = false;
     private int _nextIncomingMessageLength = 0;
     private int _bufferPosition = 0;
 
@@ -29,7 +28,6 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
         tcpClient.NoDelay = true;
 
         tcpClient.Client.NoDelay = true;
-        tcpClient.Client.Blocking = false;
 
         _tcpClient = tcpClient;
         _messageSerializer = messageSerializer;
@@ -40,6 +38,30 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
     public delegate void MessageReceivedEventHandler(TIncomingMessage message);
     public event DisconnectedEventHandler? Disconnected;
     public event MessageReceivedEventHandler? MessageReceived;
+
+    public bool Connected { get => _tcpClient.Connected; }
+
+    public bool Connect(string hostname, int port)
+    {
+        if (Connected)
+        {
+            _logger.LogInformation("Already connected.");
+            return false;
+        }
+
+        try
+        {
+            _tcpClient.Client.Blocking = true;
+            _tcpClient.Connect(hostname, port);
+            _tcpClient.Client.Blocking = false;
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(e, "Could not connect to host.");
+            return false;
+        }
+    }
 
     public void SendQueuedMessages()
     {
@@ -61,7 +83,7 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
 
     public void QueueMessage(TOutgoingMessage message)
     {
-        if (_disconnected) return;
+        if (!Connected) return;
 
         try
         {
@@ -100,7 +122,7 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
     {
         try
         {
-            if (_disconnected || _tcpClient.Client.Available == 0) return false;
+            if (!Connected || _tcpClient.Client.Available == 0) return false;
 
             if (_nextIncomingMessageLength == 0)
             {
@@ -137,9 +159,7 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
 
     public void Disconnect()
     {
-        if (_disconnected) return;
-
-        _disconnected = true;
+        if (!Connected) return;
 
         try
         {
