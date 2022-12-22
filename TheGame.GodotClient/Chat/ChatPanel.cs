@@ -13,12 +13,8 @@ public partial class ChatPanel : Panel
     {
         _richTextLabel = GetNode<RichTextLabel>("MarginContainer/VBoxContainer/RichTextLabel");
 
-        var inputField = GetNode<LineEdit>("MarginContainer/VBoxContainer/HBoxContainer/InputField");
-        inputField.TextSubmitted += text => EmitSignal(SignalName.ChatMessageSubmitted, text);
-    }
-
-    public override void _Process(double delta)
-    {
+        var chatBar = GetNode<ChatBar>("MarginContainer/VBoxContainer/HBoxContainer/LineEdit");
+        chatBar.TextSubmitted += text => EmitSignal(SignalName.ChatMessageSubmitted, text);
     }
 
     public void AddMessage(string text)
