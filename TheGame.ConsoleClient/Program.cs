@@ -40,7 +40,7 @@ game.PlayerUpdated += (oldPlayer, newPlayer) =>
 };
 
 Console.Write("Name: ");
-var playerName = Console.ReadLine() ?? string.Empty;
+var playerName = Console.ReadLine() ?? "Console";
 
 if (!game.Connect("localhost", 6000)) return;
 
