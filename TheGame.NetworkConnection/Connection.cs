@@ -65,46 +65,21 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
 
     public void SendQueuedMessages()
     {
-        if (_bufferPosition == 0) return;
+        if (!Connected || _bufferPosition == 0) return;
 
         Span<byte> buffer = _messageBuffer;
         var bufferWithMessage = buffer.Slice(0, _bufferPosition);
 
-        var bytesSent = _tcpClient.Client.Send(bufferWithMessage);
-
-        if (bytesSent < _bufferPosition)
-        {
-            ReadOnlySpan<byte> remainingBuffer = bufferWithMessage.Slice(bytesSent);
-            remainingBuffer.CopyTo(buffer);
-            _bufferPosition = _bufferPosition - bytesSent;
-        }
-        _bufferPosition = 0;
-    }
-
-    public void QueueMessage(TOutgoingMessage message)
-    {
-        if (!Connected) return;
-
         try
         {
-            Span<byte> buffer = _messageBuffer;
-            var messageSize = _messageSerializer.CalculateMessageSize(message);
-            var totalSize = PrefixBufferLength + messageSize;
-
-            if (_bufferPosition + totalSize > BufferSize)
+            var bytesSent = _tcpClient.Client.Send(bufferWithMessage);
+            if (bytesSent < _bufferPosition)
             {
-                _logger.LogWarning("Message buffer is full, closing connection");
-                Disconnect();
-                return;
+                ReadOnlySpan<byte> remainingBuffer = bufferWithMessage.Slice(bytesSent);
+                remainingBuffer.CopyTo(buffer);
+                _bufferPosition = _bufferPosition - bytesSent;
             }
-
-            var prefixBuffer = buffer.Slice(_bufferPosition, PrefixBufferLength);
-            MemoryMarshal.Write(prefixBuffer, ref messageSize);
-            _bufferPosition += PrefixBufferLength;
-
-            var messageBuffer = buffer.Slice(_bufferPosition, messageSize);
-            _messageSerializer.SerializeOutgoingMessage(message, messageBuffer);
-            _bufferPosition += messageSize;
+            _bufferPosition = 0;
         }
         catch (Exception e)
         {
@@ -112,6 +87,31 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
             Disconnect();
         }
     }
+
+    public void QueueMessage(TOutgoingMessage message)
+    {
+        if (!Connected) return;
+
+        Span<byte> buffer = _messageBuffer;
+        var messageSize = _messageSerializer.CalculateMessageSize(message);
+        var totalSize = PrefixBufferLength + messageSize;
+
+        if (_bufferPosition + totalSize > BufferSize)
+        {
+            _logger.LogWarning("Message buffer is full, closing connection");
+            Disconnect();
+            return;
+        }
+
+        var prefixBuffer = buffer.Slice(_bufferPosition, PrefixBufferLength);
+        MemoryMarshal.Write(prefixBuffer, ref messageSize);
+        _bufferPosition += PrefixBufferLength;
+
+        var messageBuffer = buffer.Slice(_bufferPosition, messageSize);
+        _messageSerializer.SerializeOutgoingMessage(message, messageBuffer);
+        _bufferPosition += messageSize;
+    }
+
 
     public void HandleIncomingMessages()
     {
