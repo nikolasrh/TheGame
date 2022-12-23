@@ -26,7 +26,7 @@ var server = new Server<ClientMessage, ServerMessage>(
     serverMessageSerializer,
     loggerFactory.CreateLogger<Server<ClientMessage, ServerMessage>>());
 
-var loop = new Loop(new LoopOptions(10), loggerFactory.CreateLogger<Loop>());
+var loop = new Loop(new LoopOptions(60), loggerFactory.CreateLogger<Loop>());
 
 var game = new Game(
     clientMessageEventQueue,

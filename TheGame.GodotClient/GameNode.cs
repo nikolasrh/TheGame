@@ -27,7 +27,7 @@ public partial class GameNode : Node
             new TcpClient(),
             loggerFactory.CreateLogger<Connection<ServerMessage, ClientMessage>>());
 
-        var loop = new Loop(new LoopOptions(10), loggerFactory.CreateLogger<Loop>());
+        var loop = new Loop(new LoopOptions(60), loggerFactory.CreateLogger<Loop>());
 
         Game = new Game(loop, connection, loggerFactory.CreateLogger<Game>());
     }
