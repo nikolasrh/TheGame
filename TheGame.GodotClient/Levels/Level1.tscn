@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://ko4wb473ec4n"]
 
 [ext_resource type="Texture2D" uid="uid://2exwodbti67h" path="res://Levels/Art/Tile.png" id="1_meck2"]
-[ext_resource type="PackedScene" uid="uid://btxg0mewvuah0" path="res://Wizard/Wizard.tscn" id="2_lk66h"]
+[ext_resource type="PackedScene" uid="uid://btxg0mewvuah0" path="res://Characters/Wizard.tscn" id="2_lk66h"]
 [ext_resource type="PackedScene" uid="uid://r20mrpm44esr" path="res://Chat/Chat.tscn" id="3_u77wn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5jq6g"]

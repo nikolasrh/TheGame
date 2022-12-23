@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ct84g71fmh7if"
-path="res://.godot/imported/Death.png-755001410033eb403e3425e596bd7aeb.ctex"
+uid="uid://bn7www46mttvv"
+path="res://.godot/imported/Attack2.png-d81462a15d45b2a34f09b6915e8e7f10.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Wizard/Art/Death.png"
-dest_files=["res://.godot/imported/Death.png-755001410033eb403e3425e596bd7aeb.ctex"]
+source_file="res://Characters/Art/Attack2.png"
+dest_files=["res://.godot/imported/Attack2.png-d81462a15d45b2a34f09b6915e8e7f10.ctex"]
 
 [params]
 

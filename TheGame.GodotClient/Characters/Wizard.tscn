@@ -1,10 +1,10 @@
 [gd_scene load_steps=26 format=3 uid="uid://btxg0mewvuah0"]
 
-[ext_resource type="Texture2D" uid="uid://cu33c2e74xp4l" path="res://Wizard/Art/Idle.png" id="1_gkn5u"]
-[ext_resource type="Script" path="res://Wizard/Wizard.cs" id="1_imn5j"]
-[ext_resource type="Texture2D" uid="uid://d13efxrdsto2j" path="res://Wizard/Art/Fall.png" id="2_ktpa1"]
-[ext_resource type="Texture2D" uid="uid://cmvnt0jdgfda2" path="res://Wizard/Art/Jump.png" id="4_cc1lt"]
-[ext_resource type="Texture2D" uid="uid://by72rqe8djbs2" path="res://Wizard/Art/Run.png" id="5_l08w1"]
+[ext_resource type="Texture2D" uid="uid://cu33c2e74xp4l" path="res://Characters/Art/Idle.png" id="1_gkn5u"]
+[ext_resource type="Script" path="res://Characters/Wizard.cs" id="1_imn5j"]
+[ext_resource type="Texture2D" uid="uid://d13efxrdsto2j" path="res://Characters/Art/Fall.png" id="2_ktpa1"]
+[ext_resource type="Texture2D" uid="uid://cmvnt0jdgfda2" path="res://Characters/Art/Jump.png" id="4_cc1lt"]
+[ext_resource type="Texture2D" uid="uid://by72rqe8djbs2" path="res://Characters/Art/Run.png" id="5_l08w1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1g22s"]
 atlas = ExtResource("2_ktpa1")
