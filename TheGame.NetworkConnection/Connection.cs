@@ -159,15 +159,16 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
 
     public void Disconnect()
     {
-        if (!Connected) return;
-
-        try
+        if (Connected)
         {
-            _tcpClient.Close();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error when closing tcp client");
+            try
+            {
+                _tcpClient.Close();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error when closing tcp client");
+            }
         }
 
         Disconnected?.Invoke();
