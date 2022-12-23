@@ -4,13 +4,11 @@
 [ext_resource type="Script" path="res://Chat/ChatBar.cs" id="2_40nvb"]
 
 [node name="Chat" type="Panel"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -552.0
-offset_bottom = -348.0
-grow_horizontal = 2
-grow_vertical = 2
+custom_minimum_size = Vector2(300, 140)
+offset_right = 300.0
+offset_bottom = 140.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
 script = ExtResource("1_1w2er")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

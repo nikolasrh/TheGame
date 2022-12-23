@@ -17,7 +17,7 @@ public partial class Connect : VBoxContainer
             if (game.Connect(hostname.Value, port.Value))
             {
                 game.JoinGame(playerName.Value);
-                GetTree().ChangeSceneToFile("res://Main.tscn");
+                GetTree().ChangeSceneToFile("res://Levels/Level1.tscn");
             }
             else
             {
