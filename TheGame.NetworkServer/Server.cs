@@ -62,7 +62,11 @@ public class Server<TIncomingMessage, TOutgoingMessage>
 
                 var connection = new Connection<TIncomingMessage, TOutgoingMessage>(_messageSerializer, client, _logger);
 
-                connection.Disconnected += () => ConnectionClosed?.Invoke(connectionId);
+                connection.Disconnected += () =>
+                {
+                    _connections.TryRemove(connectionId, out _);
+                    ConnectionClosed?.Invoke(connectionId);
+                };
                 connection.MessageReceived += message => MessageReceived?.Invoke(connectionId, message);
 
                 if (_connections.TryAdd(connectionId, connection))
