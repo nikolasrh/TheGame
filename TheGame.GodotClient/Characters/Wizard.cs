@@ -4,7 +4,8 @@ public partial class Wizard : CharacterBody2D
 {
     public const float Speed = 300.0f;
     public const float JumpVelocity = -400.0f;
-    public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+    [Export]
+    public bool PlayerName;
     private AnimatedSprite2D _animatedSprite;
     private CollisionShape2D _collisionShape;
 
