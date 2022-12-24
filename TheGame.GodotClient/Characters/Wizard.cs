@@ -1,29 +1,52 @@
 using Godot;
 
+
+namespace TheGame.GodotClient.Characters;
+
 public partial class Wizard : CharacterBody2D
 {
     public const float Speed = 300.0f;
     public const float JumpVelocity = -400.0f;
+    public static readonly float Gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+    private static readonly Vector2 FlipX = new Vector2(-1, 1);
     [Export]
-    public bool PlayerName;
+    private bool _playerControlled = false;
+    [Export]
+    private string _playerName;
     private AnimatedSprite2D _animatedSprite;
     private CollisionShape2D _collisionShape;
+    private Label _label;
 
-    private Vector2 _flipX = new Vector2(-1, 1);
+    [Signal]
+    public delegate void PositionChangedEventHandler(Vector2 pos);
+
+    public void SetPlayerName(string playerName)
+    {
+        _playerName = playerName;
+
+        if (_label != null)
+        {
+            _label.Text = playerName;
+        }
+    }
 
     public override void _Ready()
     {
         _animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         _collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
+        _label = GetNode<Label>("Label");
+        _label.Text = _playerName;
     }
 
     public override void _PhysicsProcess(double delta)
     {
+        if (!_playerControlled) return;
+
         Vector2 velocity = Velocity;
 
         if (!IsOnFloor())
         {
-            velocity.y += gravity * (float)delta;
+            velocity.y += Gravity * (float)delta;
 
             _animatedSprite.Animation = velocity.y < 0 ? "jump" : "fall";
         }
@@ -57,7 +80,7 @@ public partial class Wizard : CharacterBody2D
             if (_animatedSprite.FlipH == false)
             {
                 _animatedSprite.FlipH = true;
-                _collisionShape.Position = _flipX * _collisionShape.Position;
+                _collisionShape.Position = FlipX * _collisionShape.Position;
             }
         }
         if (direction > 0)
@@ -65,11 +88,19 @@ public partial class Wizard : CharacterBody2D
             if (_animatedSprite.FlipH == true)
             {
                 _animatedSprite.FlipH = false;
-                _collisionShape.Position = _flipX * _collisionShape.Position;
+                _collisionShape.Position = FlipX * _collisionShape.Position;
             }
         }
 
         Velocity = velocity;
+
+        var oldPosition = Position;
+
         MoveAndSlide();
+
+        if (oldPosition != Position)
+        {
+            EmitSignal(SignalName.PositionChanged, Position);
+        }
     }
 }

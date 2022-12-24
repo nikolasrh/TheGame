@@ -8,6 +8,7 @@ message ServerMessage {
     Chat chat = 3;
     PlayerUpdated player_updated = 4;
     Welcome welcome = 5;
+    PlayerMoved player_moved = 6;
   }
 }
 
@@ -26,6 +27,12 @@ message PlayerLeft {
 
 message PlayerUpdated {
   Player player = 1;
+}
+
+message PlayerMoved {
+  string player_id = 1;
+  float x = 2;
+  float y = 3;
 }
 
 message Chat {
@@ -48,6 +55,7 @@ message ClientMessage {
     LeaveGame leave_game = 2;
     SendChat send_chat = 3;
     ChangeName change_name = 4;
+    Move move = 5;
   }
 }
 
@@ -64,4 +72,9 @@ message LeaveGame {
 
 message ChangeName {
   string name = 1;
+}
+
+message Move {
+  float x = 1;
+  float y = 2;
 }

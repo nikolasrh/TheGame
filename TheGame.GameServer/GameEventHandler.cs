@@ -66,6 +66,9 @@ public class GameEventHandler
             case ClientMessage.MessageOneofCase.SendChat:
                 HandleSendChat(clientMessageEvent.connectionId, clientMessageEvent.message.SendChat);
                 break;
+            case ClientMessage.MessageOneofCase.Move:
+                HandleMove(clientMessageEvent.connectionId, clientMessageEvent.message.Move);
+                break;
         }
     }
 
@@ -153,6 +156,25 @@ public class GameEventHandler
         };
 
         _server.QueueMessage(chatMessage);
+    }
+
+    private void HandleMove(Guid connectionId, Move move)
+    {
+        var player = _game.GetPlayer(connectionId);
+
+        if (player is null) return;
+
+        var playedMovedMessage = new ServerMessage
+        {
+            PlayerMoved = new Protobuf.PlayerMoved
+            {
+                PlayerId = player.Value.ConnectionId.ToString(),
+                X = move.X,
+                Y = move.Y
+            }
+        };
+
+        _server.QueueMessage(playedMovedMessage);
     }
 
     private Protobuf.Player PlayerToProtobufPlayer(Player player)

@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://ko4wb473ec4n"]
+[gd_scene load_steps=7 format=3 uid="uid://ko4wb473ec4n"]
 
 [ext_resource type="Texture2D" uid="uid://2exwodbti67h" path="res://Levels/Art/Tile.png" id="1_meck2"]
+[ext_resource type="Script" path="res://Levels/Level1.cs" id="1_xisrn"]
 [ext_resource type="PackedScene" uid="uid://btxg0mewvuah0" path="res://Characters/Wizard.tscn" id="2_lk66h"]
 [ext_resource type="PackedScene" uid="uid://r20mrpm44esr" path="res://Chat/Chat.tscn" id="3_u77wn"]
 
@@ -18,6 +19,7 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_5jq6g")
 
 [node name="Level1" type="Node"]
+script = ExtResource("1_xisrn")
 
 [node name="Map" type="Node2D" parent="."]
 
@@ -28,6 +30,7 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0
 
 [node name="Player" parent="Map" instance=ExtResource("2_lk66h")]
 position = Vector2(662, -254)
+_playerControlled = true
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Map/Player"]
 remote_path = NodePath("../../Camera2D")
@@ -35,6 +38,8 @@ remote_path = NodePath("../../Camera2D")
 [node name="Camera2D" type="Camera2D" parent="Map"]
 position = Vector2(662, -254)
 current = true
+
+[node name="Players" type="Node" parent="Map"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

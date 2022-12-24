@@ -34,10 +34,14 @@ public class Game
     public delegate void PlayerJoinedEventHandler(Player player);
     public delegate void PlayerLeftEventHandler(Player player);
     public delegate void PlayerUpdatedEventHandler(Player oldPlayer, Player newPlayer);
+    public delegate void PlayerMovedEventHandler(Player player, float x, float y);
+    public delegate void GameJoinedEventHandler(string playerId, IEnumerable<Player> players);
     public event ChatMessageReceivedEventHandler? ChatMesageReceived;
     public event PlayerJoinedEventHandler? PlayerJoined;
     public event PlayerLeftEventHandler? PlayerLeft;
     public event PlayerUpdatedEventHandler? PlayerUpdated;
+    public event PlayerMovedEventHandler? PlayerMoved;
+    public event GameJoinedEventHandler? GameJoined;
 
     public bool Connected { get => _connection.Connected; }
 
@@ -104,6 +108,20 @@ public class Game
         SendClientMessage(changeName);
     }
 
+    public void Move(float x, float y)
+    {
+        var changeName = new ClientMessage
+        {
+            Move = new Move
+            {
+                X = x,
+                Y = y
+            }
+        };
+
+        SendClientMessage(changeName);
+    }
+
     private void SendClientMessage(ClientMessage message)
     {
         _connection.QueueMessage(message);
@@ -128,6 +146,9 @@ public class Game
                 break;
             case ServerMessage.MessageOneofCase.PlayerUpdated:
                 HandlePlayerUpdated(message.PlayerUpdated);
+                break;
+            case ServerMessage.MessageOneofCase.PlayerMoved:
+                HandlePlayerMoved(message.PlayerMoved);
                 break;
         }
     }
@@ -164,6 +185,8 @@ public class Game
         {
             _players.AddOrUpdate(Guid.Parse(player.Id), _ => player, (_, _) => player);
         }
+
+        GameJoined?.Invoke(welcome.PlayerId.ToString(), welcome.GameState.Players);
     }
 
     private void HandlePlayerUpdated(PlayerUpdated playerUpdated)
@@ -177,6 +200,16 @@ public class Game
             {
                 PlayerUpdated?.Invoke(oldPlayer, newPlayer);
             }
+        }
+    }
+
+    private void HandlePlayerMoved(PlayerMoved playerMoved)
+    {
+        var playerId = Guid.Parse(playerMoved.PlayerId);
+
+        if (_players.TryGetValue(playerId, out var player))
+        {
+            PlayerMoved?.Invoke(player, playerMoved.X, playerMoved.Y);
         }
     }
 }
