@@ -23,9 +23,9 @@ public partial class Level1 : Node
         _otherPlayersNode = GetNode<Node>("Map/Players");
 
         _player = GetNode<Wizard>("Map/Player");
-        _player.PositionChanged += pos => _game.Move(pos.x, pos.y);
+        _player.PositionChanged += (pos, vel) => _game.UpdatePosition(pos.x, pos.y, vel.x, vel.y);
 
-        _game.PlayerMoved += UpdatePlayerPosition;
+        _game.PlayerPositionUpdated += UpdatePlayerPosition;
         _game.PlayerUpdated += UpdatePlayerName;
         _game.PlayerJoined += CreatePlayer;
         _game.PlayerLeft += RemovePlayer;
@@ -67,11 +67,12 @@ public partial class Level1 : Node
         }
     }
 
-    private void UpdatePlayerPosition(Player player, float x, float y)
+    private void UpdatePlayerPosition(Player player, float positionX, float positionY, float velocityX, float velocityY)
     {
         if (_otherPlayers.TryGetValue(player.Id, out var wizard))
         {
-            wizard.Position = new Vector2(x, y);
+            wizard.Position = new Vector2(positionX, positionY);
+            wizard.Velocity = new Vector2(velocityX, velocityY);
         }
     }
 

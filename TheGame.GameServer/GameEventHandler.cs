@@ -66,8 +66,8 @@ public class GameEventHandler
             case ClientMessage.MessageOneofCase.SendChat:
                 HandleSendChat(clientMessageEvent.connectionId, clientMessageEvent.message.SendChat);
                 break;
-            case ClientMessage.MessageOneofCase.Move:
-                HandleMove(clientMessageEvent.connectionId, clientMessageEvent.message.Move);
+            case ClientMessage.MessageOneofCase.PositionUpdate:
+                HandlePositionUpdate(clientMessageEvent.connectionId, clientMessageEvent.message.PositionUpdate);
                 break;
         }
     }
@@ -93,7 +93,7 @@ public class GameEventHandler
 
         foreach (var existingPlayer in existingPlayers)
         {
-            _server.QueueMessage(existingPlayer.ConnectionId, playerJoinedMessage);
+            _server.QueueMessageByConnectionId(existingPlayer.ConnectionId, playerJoinedMessage);
         }
 
         _game.AddPlayer(player);
@@ -111,7 +111,7 @@ public class GameEventHandler
             }
         };
 
-        _server.QueueMessage(connectionId, welcomeMessage);
+        _server.QueueMessageByConnectionId(connectionId, welcomeMessage);
     }
 
     private void HandleLeaveGame(Guid connectionId)
@@ -158,7 +158,7 @@ public class GameEventHandler
         _server.QueueMessage(chatMessage);
     }
 
-    private void HandleMove(Guid connectionId, Move move)
+    private void HandlePositionUpdate(Guid connectionId, PositionUpdate update)
     {
         var player = _game.GetPlayer(connectionId);
 
@@ -166,11 +166,13 @@ public class GameEventHandler
 
         var playedMovedMessage = new ServerMessage
         {
-            PlayerMoved = new Protobuf.PlayerMoved
+            PlayerPositionUpdated = new Protobuf.PlayerPositionUpdated
             {
                 PlayerId = player.Value.ConnectionId.ToString(),
-                X = move.X,
-                Y = move.Y
+                PositionX = update.PositionX,
+                PositionY = update.PositionY,
+                VelocityX = update.VelocityX,
+                VelocityY = update.VelocityY
             }
         };
 

@@ -18,7 +18,7 @@ public partial class Wizard : CharacterBody2D
     private Label _label;
 
     [Signal]
-    public delegate void PositionChangedEventHandler(Vector2 pos);
+    public delegate void PositionChangedEventHandler(Vector2 position, Vector2 velocity);
 
     public void SetPlayerName(string playerName)
     {
@@ -40,7 +40,12 @@ public partial class Wizard : CharacterBody2D
 
     public override void _PhysicsProcess(double delta)
     {
-        if (!_playerControlled) return;
+        if (!_playerControlled)
+        {
+            MoveAndSlide();
+            UpdateAnimationWhenNotControlledByPlayer();
+            return;
+        }
 
         Vector2 velocity = Velocity;
 
@@ -92,15 +97,52 @@ public partial class Wizard : CharacterBody2D
             }
         }
 
-        Velocity = velocity;
 
         var oldPosition = Position;
+        var oldVelocity = Velocity;
 
+        Velocity = velocity;
         MoveAndSlide();
 
-        if (oldPosition != Position)
+        if (oldPosition != Position || oldVelocity != Velocity)
         {
-            EmitSignal(SignalName.PositionChanged, Position);
+            EmitSignal(SignalName.PositionChanged, Position, Velocity);
+        }
+    }
+
+    private void UpdateAnimationWhenNotControlledByPlayer()
+    {
+        if (!IsOnFloor())
+        {
+            _animatedSprite.Animation = Velocity.y < 0 ? "jump" : "fall";
+        }
+        else
+        {
+            if (Velocity.x == 0)
+            {
+                _animatedSprite.Animation = "idle";
+            }
+            else
+            {
+                _animatedSprite.Animation = "run";
+            }
+        }
+
+        if (Velocity.x < 0)
+        {
+            if (_animatedSprite.FlipH == false)
+            {
+                _animatedSprite.FlipH = true;
+                _collisionShape.Position = FlipX * _collisionShape.Position;
+            }
+        }
+        if (Velocity.x > 0)
+        {
+            if (_animatedSprite.FlipH == true)
+            {
+                _animatedSprite.FlipH = false;
+                _collisionShape.Position = FlipX * _collisionShape.Position;
+            }
         }
     }
 }

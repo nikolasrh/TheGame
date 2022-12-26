@@ -34,13 +34,13 @@ public class Game
     public delegate void PlayerJoinedEventHandler(Player player);
     public delegate void PlayerLeftEventHandler(Player player);
     public delegate void PlayerUpdatedEventHandler(Player oldPlayer, Player newPlayer);
-    public delegate void PlayerMovedEventHandler(Player player, float x, float y);
+    public delegate void PlayerPositionUpdatedEventHandler(Player player, float positionX, float positionY, float velocityX, float velocityY);
     public delegate void GameJoinedEventHandler(string playerId, IEnumerable<Player> players);
     public event ChatMessageReceivedEventHandler? ChatMesageReceived;
     public event PlayerJoinedEventHandler? PlayerJoined;
     public event PlayerLeftEventHandler? PlayerLeft;
     public event PlayerUpdatedEventHandler? PlayerUpdated;
-    public event PlayerMovedEventHandler? PlayerMoved;
+    public event PlayerPositionUpdatedEventHandler? PlayerPositionUpdated;
     public event GameJoinedEventHandler? GameJoined;
 
     public bool Connected { get => _connection.Connected; }
@@ -108,14 +108,16 @@ public class Game
         SendClientMessage(changeName);
     }
 
-    public void Move(float x, float y)
+    public void UpdatePosition(float positionX, float positionY, float velocityX, float velocityY)
     {
         var changeName = new ClientMessage
         {
-            Move = new Move
+            PositionUpdate = new PositionUpdate
             {
-                X = x,
-                Y = y
+                PositionX = positionX,
+                PositionY = positionY,
+                VelocityX = velocityX,
+                VelocityY = velocityY
             }
         };
 
@@ -147,8 +149,8 @@ public class Game
             case ServerMessage.MessageOneofCase.PlayerUpdated:
                 HandlePlayerUpdated(message.PlayerUpdated);
                 break;
-            case ServerMessage.MessageOneofCase.PlayerMoved:
-                HandlePlayerMoved(message.PlayerMoved);
+            case ServerMessage.MessageOneofCase.PlayerPositionUpdated:
+                HandlePlayerPositionUpdated(message.PlayerPositionUpdated);
                 break;
         }
     }
@@ -203,13 +205,13 @@ public class Game
         }
     }
 
-    private void HandlePlayerMoved(PlayerMoved playerMoved)
+    private void HandlePlayerPositionUpdated(PlayerPositionUpdated update)
     {
-        var playerId = Guid.Parse(playerMoved.PlayerId);
+        var playerId = Guid.Parse(update.PlayerId);
 
         if (_players.TryGetValue(playerId, out var player))
         {
-            PlayerMoved?.Invoke(player, playerMoved.X, playerMoved.Y);
+            PlayerPositionUpdated?.Invoke(player, update.PositionX, update.PositionY, update.VelocityX, update.VelocityY);
         }
     }
 }

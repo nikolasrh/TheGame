@@ -24,51 +24,55 @@ namespace TheGame.Protobuf {
     static MessagesReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg5tZXNzYWdlcy5wcm90bxIQVGhlR2FtZS5Qcm90b2J1ZiLQAgoNU2VydmVy",
+            "Cg5tZXNzYWdlcy5wcm90bxIQVGhlR2FtZS5Qcm90b2J1ZiLlAgoNU2VydmVy",
             "TWVzc2FnZRI3Cg1wbGF5ZXJfam9pbmVkGAEgASgLMh4uVGhlR2FtZS5Qcm90",
             "b2J1Zi5QbGF5ZXJKb2luZWRIABIzCgtwbGF5ZXJfbGVmdBgCIAEoCzIcLlRo",
             "ZUdhbWUuUHJvdG9idWYuUGxheWVyTGVmdEgAEiYKBGNoYXQYAyABKAsyFi5U",
             "aGVHYW1lLlByb3RvYnVmLkNoYXRIABI5Cg5wbGF5ZXJfdXBkYXRlZBgEIAEo",
             "CzIfLlRoZUdhbWUuUHJvdG9idWYuUGxheWVyVXBkYXRlZEgAEiwKB3dlbGNv",
-            "bWUYBSABKAsyGS5UaGVHYW1lLlByb3RvYnVmLldlbGNvbWVIABI1CgxwbGF5",
-            "ZXJfbW92ZWQYBiABKAsyHS5UaGVHYW1lLlByb3RvYnVmLlBsYXllck1vdmVk",
-            "SABCCQoHbWVzc2FnZSIiCgZQbGF5ZXISCgoCaWQYASABKAkSDAoEbmFtZRgC",
-            "IAEoCSI4CgxQbGF5ZXJKb2luZWQSKAoGcGxheWVyGAEgASgLMhguVGhlR2Ft",
-            "ZS5Qcm90b2J1Zi5QbGF5ZXIiHwoKUGxheWVyTGVmdBIRCglwbGF5ZXJfaWQY",
-            "ASABKAkiOQoNUGxheWVyVXBkYXRlZBIoCgZwbGF5ZXIYASABKAsyGC5UaGVH",
-            "YW1lLlByb3RvYnVmLlBsYXllciI2CgtQbGF5ZXJNb3ZlZBIRCglwbGF5ZXJf",
-            "aWQYASABKAkSCQoBeBgCIAEoAhIJCgF5GAMgASgCIicKBENoYXQSEQoJcGxh",
-            "eWVyX2lkGAEgASgJEgwKBHRleHQYAiABKAkiTQoHV2VsY29tZRIRCglwbGF5",
-            "ZXJfaWQYASABKAkSLwoKZ2FtZV9zdGF0ZRgCIAEoCzIbLlRoZUdhbWUuUHJv",
-            "dG9idWYuR2FtZVN0YXRlIjYKCUdhbWVTdGF0ZRIpCgdwbGF5ZXJzGAEgAygL",
-            "MhguVGhlR2FtZS5Qcm90b2J1Zi5QbGF5ZXIijAIKDUNsaWVudE1lc3NhZ2US",
-            "LwoJam9pbl9nYW1lGAEgASgLMhouVGhlR2FtZS5Qcm90b2J1Zi5Kb2luR2Ft",
-            "ZUgAEjEKCmxlYXZlX2dhbWUYAiABKAsyGy5UaGVHYW1lLlByb3RvYnVmLkxl",
-            "YXZlR2FtZUgAEi8KCXNlbmRfY2hhdBgDIAEoCzIaLlRoZUdhbWUuUHJvdG9i",
-            "dWYuU2VuZENoYXRIABIzCgtjaGFuZ2VfbmFtZRgEIAEoCzIcLlRoZUdhbWUu",
-            "UHJvdG9idWYuQ2hhbmdlTmFtZUgAEiYKBG1vdmUYBSABKAsyFi5UaGVHYW1l",
-            "LlByb3RvYnVmLk1vdmVIAEIJCgdtZXNzYWdlIhgKCEpvaW5HYW1lEgwKBG5h",
-            "bWUYASABKAkiGAoIU2VuZENoYXQSDAoEdGV4dBgBIAEoCSILCglMZWF2ZUdh",
-            "bWUiGgoKQ2hhbmdlTmFtZRIMCgRuYW1lGAEgASgJIhwKBE1vdmUSCQoBeBgB",
-            "IAEoAhIJCgF5GAIgASgCYgZwcm90bzM="));
+            "bWUYBSABKAsyGS5UaGVHYW1lLlByb3RvYnVmLldlbGNvbWVIABJKChdwbGF5",
+            "ZXJfcG9zaXRpb25fdXBkYXRlZBgGIAEoCzInLlRoZUdhbWUuUHJvdG9idWYu",
+            "UGxheWVyUG9zaXRpb25VcGRhdGVkSABCCQoHbWVzc2FnZSIiCgZQbGF5ZXIS",
+            "CgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSI4CgxQbGF5ZXJKb2luZWQSKAoG",
+            "cGxheWVyGAEgASgLMhguVGhlR2FtZS5Qcm90b2J1Zi5QbGF5ZXIiHwoKUGxh",
+            "eWVyTGVmdBIRCglwbGF5ZXJfaWQYASABKAkiOQoNUGxheWVyVXBkYXRlZBIo",
+            "CgZwbGF5ZXIYASABKAsyGC5UaGVHYW1lLlByb3RvYnVmLlBsYXllciJ2ChVQ",
+            "bGF5ZXJQb3NpdGlvblVwZGF0ZWQSEQoJcGxheWVyX2lkGAEgASgJEhEKCXBv",
+            "c2l0aW9uWBgCIAEoAhIRCglwb3NpdGlvblkYAyABKAISEQoJdmVsb2NpdHlY",
+            "GAQgASgCEhEKCXZlbG9jaXR5WRgFIAEoAiInCgRDaGF0EhEKCXBsYXllcl9p",
+            "ZBgBIAEoCRIMCgR0ZXh0GAIgASgJIk0KB1dlbGNvbWUSEQoJcGxheWVyX2lk",
+            "GAEgASgJEi8KCmdhbWVfc3RhdGUYAiABKAsyGy5UaGVHYW1lLlByb3RvYnVm",
+            "LkdhbWVTdGF0ZSI2CglHYW1lU3RhdGUSKQoHcGxheWVycxgBIAMoCzIYLlRo",
+            "ZUdhbWUuUHJvdG9idWYuUGxheWVyIqECCg1DbGllbnRNZXNzYWdlEi8KCWpv",
+            "aW5fZ2FtZRgBIAEoCzIaLlRoZUdhbWUuUHJvdG9idWYuSm9pbkdhbWVIABIx",
+            "CgpsZWF2ZV9nYW1lGAIgASgLMhsuVGhlR2FtZS5Qcm90b2J1Zi5MZWF2ZUdh",
+            "bWVIABIvCglzZW5kX2NoYXQYAyABKAsyGi5UaGVHYW1lLlByb3RvYnVmLlNl",
+            "bmRDaGF0SAASMwoLY2hhbmdlX25hbWUYBCABKAsyHC5UaGVHYW1lLlByb3Rv",
+            "YnVmLkNoYW5nZU5hbWVIABI7Cg9wb3NpdGlvbl91cGRhdGUYBSABKAsyIC5U",
+            "aGVHYW1lLlByb3RvYnVmLlBvc2l0aW9uVXBkYXRlSABCCQoHbWVzc2FnZSIY",
+            "CghKb2luR2FtZRIMCgRuYW1lGAEgASgJIhgKCFNlbmRDaGF0EgwKBHRleHQY",
+            "ASABKAkiCwoJTGVhdmVHYW1lIhoKCkNoYW5nZU5hbWUSDAoEbmFtZRgBIAEo",
+            "CSJcCg5Qb3NpdGlvblVwZGF0ZRIRCglwb3NpdGlvblgYASABKAISEQoJcG9z",
+            "aXRpb25ZGAIgASgCEhEKCXZlbG9jaXR5WBgDIAEoAhIRCgl2ZWxvY2l0eVkY",
+            "BCABKAJiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.ServerMessage), global::TheGame.Protobuf.ServerMessage.Parser, new[]{ "PlayerJoined", "PlayerLeft", "Chat", "PlayerUpdated", "Welcome", "PlayerMoved" }, new[]{ "Message" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.ServerMessage), global::TheGame.Protobuf.ServerMessage.Parser, new[]{ "PlayerJoined", "PlayerLeft", "Chat", "PlayerUpdated", "Welcome", "PlayerPositionUpdated" }, new[]{ "Message" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.Player), global::TheGame.Protobuf.Player.Parser, new[]{ "Id", "Name" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.PlayerJoined), global::TheGame.Protobuf.PlayerJoined.Parser, new[]{ "Player" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.PlayerLeft), global::TheGame.Protobuf.PlayerLeft.Parser, new[]{ "PlayerId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.PlayerUpdated), global::TheGame.Protobuf.PlayerUpdated.Parser, new[]{ "Player" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.PlayerMoved), global::TheGame.Protobuf.PlayerMoved.Parser, new[]{ "PlayerId", "X", "Y" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.PlayerPositionUpdated), global::TheGame.Protobuf.PlayerPositionUpdated.Parser, new[]{ "PlayerId", "PositionX", "PositionY", "VelocityX", "VelocityY" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.Chat), global::TheGame.Protobuf.Chat.Parser, new[]{ "PlayerId", "Text" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.Welcome), global::TheGame.Protobuf.Welcome.Parser, new[]{ "PlayerId", "GameState" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.GameState), global::TheGame.Protobuf.GameState.Parser, new[]{ "Players" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.ClientMessage), global::TheGame.Protobuf.ClientMessage.Parser, new[]{ "JoinGame", "LeaveGame", "SendChat", "ChangeName", "Move" }, new[]{ "Message" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.ClientMessage), global::TheGame.Protobuf.ClientMessage.Parser, new[]{ "JoinGame", "LeaveGame", "SendChat", "ChangeName", "PositionUpdate" }, new[]{ "Message" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.JoinGame), global::TheGame.Protobuf.JoinGame.Parser, new[]{ "Name" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.SendChat), global::TheGame.Protobuf.SendChat.Parser, new[]{ "Text" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.LeaveGame), global::TheGame.Protobuf.LeaveGame.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.ChangeName), global::TheGame.Protobuf.ChangeName.Parser, new[]{ "Name" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.Move), global::TheGame.Protobuf.Move.Parser, new[]{ "X", "Y" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::TheGame.Protobuf.PositionUpdate), global::TheGame.Protobuf.PositionUpdate.Parser, new[]{ "PositionX", "PositionY", "VelocityX", "VelocityY" }, null, null, null, null)
           }));
     }
     #endregion
@@ -125,8 +129,8 @@ namespace TheGame.Protobuf {
         case MessageOneofCase.Welcome:
           Welcome = other.Welcome.Clone();
           break;
-        case MessageOneofCase.PlayerMoved:
-          PlayerMoved = other.PlayerMoved.Clone();
+        case MessageOneofCase.PlayerPositionUpdated:
+          PlayerPositionUpdated = other.PlayerPositionUpdated.Clone();
           break;
       }
 
@@ -199,15 +203,15 @@ namespace TheGame.Protobuf {
       }
     }
 
-    /// <summary>Field number for the "player_moved" field.</summary>
-    public const int PlayerMovedFieldNumber = 6;
+    /// <summary>Field number for the "player_position_updated" field.</summary>
+    public const int PlayerPositionUpdatedFieldNumber = 6;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::TheGame.Protobuf.PlayerMoved PlayerMoved {
-      get { return messageCase_ == MessageOneofCase.PlayerMoved ? (global::TheGame.Protobuf.PlayerMoved) message_ : null; }
+    public global::TheGame.Protobuf.PlayerPositionUpdated PlayerPositionUpdated {
+      get { return messageCase_ == MessageOneofCase.PlayerPositionUpdated ? (global::TheGame.Protobuf.PlayerPositionUpdated) message_ : null; }
       set {
         message_ = value;
-        messageCase_ = value == null ? MessageOneofCase.None : MessageOneofCase.PlayerMoved;
+        messageCase_ = value == null ? MessageOneofCase.None : MessageOneofCase.PlayerPositionUpdated;
       }
     }
 
@@ -220,7 +224,7 @@ namespace TheGame.Protobuf {
       Chat = 3,
       PlayerUpdated = 4,
       Welcome = 5,
-      PlayerMoved = 6,
+      PlayerPositionUpdated = 6,
     }
     private MessageOneofCase messageCase_ = MessageOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -256,7 +260,7 @@ namespace TheGame.Protobuf {
       if (!object.Equals(Chat, other.Chat)) return false;
       if (!object.Equals(PlayerUpdated, other.PlayerUpdated)) return false;
       if (!object.Equals(Welcome, other.Welcome)) return false;
-      if (!object.Equals(PlayerMoved, other.PlayerMoved)) return false;
+      if (!object.Equals(PlayerPositionUpdated, other.PlayerPositionUpdated)) return false;
       if (MessageCase != other.MessageCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -270,7 +274,7 @@ namespace TheGame.Protobuf {
       if (messageCase_ == MessageOneofCase.Chat) hash ^= Chat.GetHashCode();
       if (messageCase_ == MessageOneofCase.PlayerUpdated) hash ^= PlayerUpdated.GetHashCode();
       if (messageCase_ == MessageOneofCase.Welcome) hash ^= Welcome.GetHashCode();
-      if (messageCase_ == MessageOneofCase.PlayerMoved) hash ^= PlayerMoved.GetHashCode();
+      if (messageCase_ == MessageOneofCase.PlayerPositionUpdated) hash ^= PlayerPositionUpdated.GetHashCode();
       hash ^= (int) messageCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -310,9 +314,9 @@ namespace TheGame.Protobuf {
         output.WriteRawTag(42);
         output.WriteMessage(Welcome);
       }
-      if (messageCase_ == MessageOneofCase.PlayerMoved) {
+      if (messageCase_ == MessageOneofCase.PlayerPositionUpdated) {
         output.WriteRawTag(50);
-        output.WriteMessage(PlayerMoved);
+        output.WriteMessage(PlayerPositionUpdated);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -344,9 +348,9 @@ namespace TheGame.Protobuf {
         output.WriteRawTag(42);
         output.WriteMessage(Welcome);
       }
-      if (messageCase_ == MessageOneofCase.PlayerMoved) {
+      if (messageCase_ == MessageOneofCase.PlayerPositionUpdated) {
         output.WriteRawTag(50);
-        output.WriteMessage(PlayerMoved);
+        output.WriteMessage(PlayerPositionUpdated);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -373,8 +377,8 @@ namespace TheGame.Protobuf {
       if (messageCase_ == MessageOneofCase.Welcome) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Welcome);
       }
-      if (messageCase_ == MessageOneofCase.PlayerMoved) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(PlayerMoved);
+      if (messageCase_ == MessageOneofCase.PlayerPositionUpdated) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(PlayerPositionUpdated);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -419,11 +423,11 @@ namespace TheGame.Protobuf {
           }
           Welcome.MergeFrom(other.Welcome);
           break;
-        case MessageOneofCase.PlayerMoved:
-          if (PlayerMoved == null) {
-            PlayerMoved = new global::TheGame.Protobuf.PlayerMoved();
+        case MessageOneofCase.PlayerPositionUpdated:
+          if (PlayerPositionUpdated == null) {
+            PlayerPositionUpdated = new global::TheGame.Protobuf.PlayerPositionUpdated();
           }
-          PlayerMoved.MergeFrom(other.PlayerMoved);
+          PlayerPositionUpdated.MergeFrom(other.PlayerPositionUpdated);
           break;
       }
 
@@ -488,12 +492,12 @@ namespace TheGame.Protobuf {
             break;
           }
           case 50: {
-            global::TheGame.Protobuf.PlayerMoved subBuilder = new global::TheGame.Protobuf.PlayerMoved();
-            if (messageCase_ == MessageOneofCase.PlayerMoved) {
-              subBuilder.MergeFrom(PlayerMoved);
+            global::TheGame.Protobuf.PlayerPositionUpdated subBuilder = new global::TheGame.Protobuf.PlayerPositionUpdated();
+            if (messageCase_ == MessageOneofCase.PlayerPositionUpdated) {
+              subBuilder.MergeFrom(PlayerPositionUpdated);
             }
             input.ReadMessage(subBuilder);
-            PlayerMoved = subBuilder;
+            PlayerPositionUpdated = subBuilder;
             break;
           }
         }
@@ -557,12 +561,12 @@ namespace TheGame.Protobuf {
             break;
           }
           case 50: {
-            global::TheGame.Protobuf.PlayerMoved subBuilder = new global::TheGame.Protobuf.PlayerMoved();
-            if (messageCase_ == MessageOneofCase.PlayerMoved) {
-              subBuilder.MergeFrom(PlayerMoved);
+            global::TheGame.Protobuf.PlayerPositionUpdated subBuilder = new global::TheGame.Protobuf.PlayerPositionUpdated();
+            if (messageCase_ == MessageOneofCase.PlayerPositionUpdated) {
+              subBuilder.MergeFrom(PlayerPositionUpdated);
             }
             input.ReadMessage(subBuilder);
-            PlayerMoved = subBuilder;
+            PlayerPositionUpdated = subBuilder;
             break;
           }
         }
@@ -1383,16 +1387,16 @@ namespace TheGame.Protobuf {
 
   }
 
-  public sealed partial class PlayerMoved : pb::IMessage<PlayerMoved>
+  public sealed partial class PlayerPositionUpdated : pb::IMessage<PlayerPositionUpdated>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<PlayerMoved> _parser = new pb::MessageParser<PlayerMoved>(() => new PlayerMoved());
+    private static readonly pb::MessageParser<PlayerPositionUpdated> _parser = new pb::MessageParser<PlayerPositionUpdated>(() => new PlayerPositionUpdated());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<PlayerMoved> Parser { get { return _parser; } }
+    public static pb::MessageParser<PlayerPositionUpdated> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1408,7 +1412,7 @@ namespace TheGame.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PlayerMoved() {
+    public PlayerPositionUpdated() {
       OnConstruction();
     }
 
@@ -1416,17 +1420,19 @@ namespace TheGame.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PlayerMoved(PlayerMoved other) : this() {
+    public PlayerPositionUpdated(PlayerPositionUpdated other) : this() {
       playerId_ = other.playerId_;
-      x_ = other.x_;
-      y_ = other.y_;
+      positionX_ = other.positionX_;
+      positionY_ = other.positionY_;
+      velocityX_ = other.velocityX_;
+      velocityY_ = other.velocityY_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PlayerMoved Clone() {
-      return new PlayerMoved(this);
+    public PlayerPositionUpdated Clone() {
+      return new PlayerPositionUpdated(this);
     }
 
     /// <summary>Field number for the "player_id" field.</summary>
@@ -1441,39 +1447,63 @@ namespace TheGame.Protobuf {
       }
     }
 
-    /// <summary>Field number for the "x" field.</summary>
-    public const int XFieldNumber = 2;
-    private float x_;
+    /// <summary>Field number for the "positionX" field.</summary>
+    public const int PositionXFieldNumber = 2;
+    private float positionX_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public float X {
-      get { return x_; }
+    public float PositionX {
+      get { return positionX_; }
       set {
-        x_ = value;
+        positionX_ = value;
       }
     }
 
-    /// <summary>Field number for the "y" field.</summary>
-    public const int YFieldNumber = 3;
-    private float y_;
+    /// <summary>Field number for the "positionY" field.</summary>
+    public const int PositionYFieldNumber = 3;
+    private float positionY_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public float Y {
-      get { return y_; }
+    public float PositionY {
+      get { return positionY_; }
       set {
-        y_ = value;
+        positionY_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "velocityX" field.</summary>
+    public const int VelocityXFieldNumber = 4;
+    private float velocityX_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float VelocityX {
+      get { return velocityX_; }
+      set {
+        velocityX_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "velocityY" field.</summary>
+    public const int VelocityYFieldNumber = 5;
+    private float velocityY_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float VelocityY {
+      get { return velocityY_; }
+      set {
+        velocityY_ = value;
       }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as PlayerMoved);
+      return Equals(other as PlayerPositionUpdated);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(PlayerMoved other) {
+    public bool Equals(PlayerPositionUpdated other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -1481,8 +1511,10 @@ namespace TheGame.Protobuf {
         return true;
       }
       if (PlayerId != other.PlayerId) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(X, other.X)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Y, other.Y)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(PositionX, other.PositionX)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(PositionY, other.PositionY)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(VelocityX, other.VelocityX)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(VelocityY, other.VelocityY)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1491,8 +1523,10 @@ namespace TheGame.Protobuf {
     public override int GetHashCode() {
       int hash = 1;
       if (PlayerId.Length != 0) hash ^= PlayerId.GetHashCode();
-      if (X != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(X);
-      if (Y != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Y);
+      if (PositionX != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(PositionX);
+      if (PositionY != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(PositionY);
+      if (VelocityX != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(VelocityX);
+      if (VelocityY != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(VelocityY);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1515,13 +1549,21 @@ namespace TheGame.Protobuf {
         output.WriteRawTag(10);
         output.WriteString(PlayerId);
       }
-      if (X != 0F) {
+      if (PositionX != 0F) {
         output.WriteRawTag(21);
-        output.WriteFloat(X);
+        output.WriteFloat(PositionX);
       }
-      if (Y != 0F) {
+      if (PositionY != 0F) {
         output.WriteRawTag(29);
-        output.WriteFloat(Y);
+        output.WriteFloat(PositionY);
+      }
+      if (VelocityX != 0F) {
+        output.WriteRawTag(37);
+        output.WriteFloat(VelocityX);
+      }
+      if (VelocityY != 0F) {
+        output.WriteRawTag(45);
+        output.WriteFloat(VelocityY);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -1537,13 +1579,21 @@ namespace TheGame.Protobuf {
         output.WriteRawTag(10);
         output.WriteString(PlayerId);
       }
-      if (X != 0F) {
+      if (PositionX != 0F) {
         output.WriteRawTag(21);
-        output.WriteFloat(X);
+        output.WriteFloat(PositionX);
       }
-      if (Y != 0F) {
+      if (PositionY != 0F) {
         output.WriteRawTag(29);
-        output.WriteFloat(Y);
+        output.WriteFloat(PositionY);
+      }
+      if (VelocityX != 0F) {
+        output.WriteRawTag(37);
+        output.WriteFloat(VelocityX);
+      }
+      if (VelocityY != 0F) {
+        output.WriteRawTag(45);
+        output.WriteFloat(VelocityY);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -1558,10 +1608,16 @@ namespace TheGame.Protobuf {
       if (PlayerId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerId);
       }
-      if (X != 0F) {
+      if (PositionX != 0F) {
         size += 1 + 4;
       }
-      if (Y != 0F) {
+      if (PositionY != 0F) {
+        size += 1 + 4;
+      }
+      if (VelocityX != 0F) {
+        size += 1 + 4;
+      }
+      if (VelocityY != 0F) {
         size += 1 + 4;
       }
       if (_unknownFields != null) {
@@ -1572,18 +1628,24 @@ namespace TheGame.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(PlayerMoved other) {
+    public void MergeFrom(PlayerPositionUpdated other) {
       if (other == null) {
         return;
       }
       if (other.PlayerId.Length != 0) {
         PlayerId = other.PlayerId;
       }
-      if (other.X != 0F) {
-        X = other.X;
+      if (other.PositionX != 0F) {
+        PositionX = other.PositionX;
       }
-      if (other.Y != 0F) {
-        Y = other.Y;
+      if (other.PositionY != 0F) {
+        PositionY = other.PositionY;
+      }
+      if (other.VelocityX != 0F) {
+        VelocityX = other.VelocityX;
+      }
+      if (other.VelocityY != 0F) {
+        VelocityY = other.VelocityY;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1605,11 +1667,19 @@ namespace TheGame.Protobuf {
             break;
           }
           case 21: {
-            X = input.ReadFloat();
+            PositionX = input.ReadFloat();
             break;
           }
           case 29: {
-            Y = input.ReadFloat();
+            PositionY = input.ReadFloat();
+            break;
+          }
+          case 37: {
+            VelocityX = input.ReadFloat();
+            break;
+          }
+          case 45: {
+            VelocityY = input.ReadFloat();
             break;
           }
         }
@@ -1632,11 +1702,19 @@ namespace TheGame.Protobuf {
             break;
           }
           case 21: {
-            X = input.ReadFloat();
+            PositionX = input.ReadFloat();
             break;
           }
           case 29: {
-            Y = input.ReadFloat();
+            PositionY = input.ReadFloat();
+            break;
+          }
+          case 37: {
+            VelocityX = input.ReadFloat();
+            break;
+          }
+          case 45: {
+            VelocityY = input.ReadFloat();
             break;
           }
         }
@@ -2332,8 +2410,8 @@ namespace TheGame.Protobuf {
         case MessageOneofCase.ChangeName:
           ChangeName = other.ChangeName.Clone();
           break;
-        case MessageOneofCase.Move:
-          Move = other.Move.Clone();
+        case MessageOneofCase.PositionUpdate:
+          PositionUpdate = other.PositionUpdate.Clone();
           break;
       }
 
@@ -2394,15 +2472,15 @@ namespace TheGame.Protobuf {
       }
     }
 
-    /// <summary>Field number for the "move" field.</summary>
-    public const int MoveFieldNumber = 5;
+    /// <summary>Field number for the "position_update" field.</summary>
+    public const int PositionUpdateFieldNumber = 5;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::TheGame.Protobuf.Move Move {
-      get { return messageCase_ == MessageOneofCase.Move ? (global::TheGame.Protobuf.Move) message_ : null; }
+    public global::TheGame.Protobuf.PositionUpdate PositionUpdate {
+      get { return messageCase_ == MessageOneofCase.PositionUpdate ? (global::TheGame.Protobuf.PositionUpdate) message_ : null; }
       set {
         message_ = value;
-        messageCase_ = value == null ? MessageOneofCase.None : MessageOneofCase.Move;
+        messageCase_ = value == null ? MessageOneofCase.None : MessageOneofCase.PositionUpdate;
       }
     }
 
@@ -2414,7 +2492,7 @@ namespace TheGame.Protobuf {
       LeaveGame = 2,
       SendChat = 3,
       ChangeName = 4,
-      Move = 5,
+      PositionUpdate = 5,
     }
     private MessageOneofCase messageCase_ = MessageOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2449,7 +2527,7 @@ namespace TheGame.Protobuf {
       if (!object.Equals(LeaveGame, other.LeaveGame)) return false;
       if (!object.Equals(SendChat, other.SendChat)) return false;
       if (!object.Equals(ChangeName, other.ChangeName)) return false;
-      if (!object.Equals(Move, other.Move)) return false;
+      if (!object.Equals(PositionUpdate, other.PositionUpdate)) return false;
       if (MessageCase != other.MessageCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -2462,7 +2540,7 @@ namespace TheGame.Protobuf {
       if (messageCase_ == MessageOneofCase.LeaveGame) hash ^= LeaveGame.GetHashCode();
       if (messageCase_ == MessageOneofCase.SendChat) hash ^= SendChat.GetHashCode();
       if (messageCase_ == MessageOneofCase.ChangeName) hash ^= ChangeName.GetHashCode();
-      if (messageCase_ == MessageOneofCase.Move) hash ^= Move.GetHashCode();
+      if (messageCase_ == MessageOneofCase.PositionUpdate) hash ^= PositionUpdate.GetHashCode();
       hash ^= (int) messageCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -2498,9 +2576,9 @@ namespace TheGame.Protobuf {
         output.WriteRawTag(34);
         output.WriteMessage(ChangeName);
       }
-      if (messageCase_ == MessageOneofCase.Move) {
+      if (messageCase_ == MessageOneofCase.PositionUpdate) {
         output.WriteRawTag(42);
-        output.WriteMessage(Move);
+        output.WriteMessage(PositionUpdate);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -2528,9 +2606,9 @@ namespace TheGame.Protobuf {
         output.WriteRawTag(34);
         output.WriteMessage(ChangeName);
       }
-      if (messageCase_ == MessageOneofCase.Move) {
+      if (messageCase_ == MessageOneofCase.PositionUpdate) {
         output.WriteRawTag(42);
-        output.WriteMessage(Move);
+        output.WriteMessage(PositionUpdate);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -2554,8 +2632,8 @@ namespace TheGame.Protobuf {
       if (messageCase_ == MessageOneofCase.ChangeName) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(ChangeName);
       }
-      if (messageCase_ == MessageOneofCase.Move) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Move);
+      if (messageCase_ == MessageOneofCase.PositionUpdate) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(PositionUpdate);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2594,11 +2672,11 @@ namespace TheGame.Protobuf {
           }
           ChangeName.MergeFrom(other.ChangeName);
           break;
-        case MessageOneofCase.Move:
-          if (Move == null) {
-            Move = new global::TheGame.Protobuf.Move();
+        case MessageOneofCase.PositionUpdate:
+          if (PositionUpdate == null) {
+            PositionUpdate = new global::TheGame.Protobuf.PositionUpdate();
           }
-          Move.MergeFrom(other.Move);
+          PositionUpdate.MergeFrom(other.PositionUpdate);
           break;
       }
 
@@ -2654,12 +2732,12 @@ namespace TheGame.Protobuf {
             break;
           }
           case 42: {
-            global::TheGame.Protobuf.Move subBuilder = new global::TheGame.Protobuf.Move();
-            if (messageCase_ == MessageOneofCase.Move) {
-              subBuilder.MergeFrom(Move);
+            global::TheGame.Protobuf.PositionUpdate subBuilder = new global::TheGame.Protobuf.PositionUpdate();
+            if (messageCase_ == MessageOneofCase.PositionUpdate) {
+              subBuilder.MergeFrom(PositionUpdate);
             }
             input.ReadMessage(subBuilder);
-            Move = subBuilder;
+            PositionUpdate = subBuilder;
             break;
           }
         }
@@ -2714,12 +2792,12 @@ namespace TheGame.Protobuf {
             break;
           }
           case 42: {
-            global::TheGame.Protobuf.Move subBuilder = new global::TheGame.Protobuf.Move();
-            if (messageCase_ == MessageOneofCase.Move) {
-              subBuilder.MergeFrom(Move);
+            global::TheGame.Protobuf.PositionUpdate subBuilder = new global::TheGame.Protobuf.PositionUpdate();
+            if (messageCase_ == MessageOneofCase.PositionUpdate) {
+              subBuilder.MergeFrom(PositionUpdate);
             }
             input.ReadMessage(subBuilder);
-            Move = subBuilder;
+            PositionUpdate = subBuilder;
             break;
           }
         }
@@ -3448,16 +3526,16 @@ namespace TheGame.Protobuf {
 
   }
 
-  public sealed partial class Move : pb::IMessage<Move>
+  public sealed partial class PositionUpdate : pb::IMessage<PositionUpdate>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<Move> _parser = new pb::MessageParser<Move>(() => new Move());
+    private static readonly pb::MessageParser<PositionUpdate> _parser = new pb::MessageParser<PositionUpdate>(() => new PositionUpdate());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Move> Parser { get { return _parser; } }
+    public static pb::MessageParser<PositionUpdate> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3473,7 +3551,7 @@ namespace TheGame.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Move() {
+    public PositionUpdate() {
       OnConstruction();
     }
 
@@ -3481,59 +3559,87 @@ namespace TheGame.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Move(Move other) : this() {
-      x_ = other.x_;
-      y_ = other.y_;
+    public PositionUpdate(PositionUpdate other) : this() {
+      positionX_ = other.positionX_;
+      positionY_ = other.positionY_;
+      velocityX_ = other.velocityX_;
+      velocityY_ = other.velocityY_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Move Clone() {
-      return new Move(this);
+    public PositionUpdate Clone() {
+      return new PositionUpdate(this);
     }
 
-    /// <summary>Field number for the "x" field.</summary>
-    public const int XFieldNumber = 1;
-    private float x_;
+    /// <summary>Field number for the "positionX" field.</summary>
+    public const int PositionXFieldNumber = 1;
+    private float positionX_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public float X {
-      get { return x_; }
+    public float PositionX {
+      get { return positionX_; }
       set {
-        x_ = value;
+        positionX_ = value;
       }
     }
 
-    /// <summary>Field number for the "y" field.</summary>
-    public const int YFieldNumber = 2;
-    private float y_;
+    /// <summary>Field number for the "positionY" field.</summary>
+    public const int PositionYFieldNumber = 2;
+    private float positionY_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public float Y {
-      get { return y_; }
+    public float PositionY {
+      get { return positionY_; }
       set {
-        y_ = value;
+        positionY_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "velocityX" field.</summary>
+    public const int VelocityXFieldNumber = 3;
+    private float velocityX_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float VelocityX {
+      get { return velocityX_; }
+      set {
+        velocityX_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "velocityY" field.</summary>
+    public const int VelocityYFieldNumber = 4;
+    private float velocityY_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float VelocityY {
+      get { return velocityY_; }
+      set {
+        velocityY_ = value;
       }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as Move);
+      return Equals(other as PositionUpdate);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Move other) {
+    public bool Equals(PositionUpdate other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(X, other.X)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Y, other.Y)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(PositionX, other.PositionX)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(PositionY, other.PositionY)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(VelocityX, other.VelocityX)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(VelocityY, other.VelocityY)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3541,8 +3647,10 @@ namespace TheGame.Protobuf {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (X != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(X);
-      if (Y != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Y);
+      if (PositionX != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(PositionX);
+      if (PositionY != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(PositionY);
+      if (VelocityX != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(VelocityX);
+      if (VelocityY != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(VelocityY);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3561,13 +3669,21 @@ namespace TheGame.Protobuf {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (X != 0F) {
+      if (PositionX != 0F) {
         output.WriteRawTag(13);
-        output.WriteFloat(X);
+        output.WriteFloat(PositionX);
       }
-      if (Y != 0F) {
+      if (PositionY != 0F) {
         output.WriteRawTag(21);
-        output.WriteFloat(Y);
+        output.WriteFloat(PositionY);
+      }
+      if (VelocityX != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(VelocityX);
+      }
+      if (VelocityY != 0F) {
+        output.WriteRawTag(37);
+        output.WriteFloat(VelocityY);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -3579,13 +3695,21 @@ namespace TheGame.Protobuf {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (X != 0F) {
+      if (PositionX != 0F) {
         output.WriteRawTag(13);
-        output.WriteFloat(X);
+        output.WriteFloat(PositionX);
       }
-      if (Y != 0F) {
+      if (PositionY != 0F) {
         output.WriteRawTag(21);
-        output.WriteFloat(Y);
+        output.WriteFloat(PositionY);
+      }
+      if (VelocityX != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(VelocityX);
+      }
+      if (VelocityY != 0F) {
+        output.WriteRawTag(37);
+        output.WriteFloat(VelocityY);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -3597,10 +3721,16 @@ namespace TheGame.Protobuf {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (X != 0F) {
+      if (PositionX != 0F) {
         size += 1 + 4;
       }
-      if (Y != 0F) {
+      if (PositionY != 0F) {
+        size += 1 + 4;
+      }
+      if (VelocityX != 0F) {
+        size += 1 + 4;
+      }
+      if (VelocityY != 0F) {
         size += 1 + 4;
       }
       if (_unknownFields != null) {
@@ -3611,15 +3741,21 @@ namespace TheGame.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Move other) {
+    public void MergeFrom(PositionUpdate other) {
       if (other == null) {
         return;
       }
-      if (other.X != 0F) {
-        X = other.X;
+      if (other.PositionX != 0F) {
+        PositionX = other.PositionX;
       }
-      if (other.Y != 0F) {
-        Y = other.Y;
+      if (other.PositionY != 0F) {
+        PositionY = other.PositionY;
+      }
+      if (other.VelocityX != 0F) {
+        VelocityX = other.VelocityX;
+      }
+      if (other.VelocityY != 0F) {
+        VelocityY = other.VelocityY;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -3637,11 +3773,19 @@ namespace TheGame.Protobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 13: {
-            X = input.ReadFloat();
+            PositionX = input.ReadFloat();
             break;
           }
           case 21: {
-            Y = input.ReadFloat();
+            PositionY = input.ReadFloat();
+            break;
+          }
+          case 29: {
+            VelocityX = input.ReadFloat();
+            break;
+          }
+          case 37: {
+            VelocityY = input.ReadFloat();
             break;
           }
         }
@@ -3660,11 +3804,19 @@ namespace TheGame.Protobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 13: {
-            X = input.ReadFloat();
+            PositionX = input.ReadFloat();
             break;
           }
           case 21: {
-            Y = input.ReadFloat();
+            PositionY = input.ReadFloat();
+            break;
+          }
+          case 29: {
+            VelocityX = input.ReadFloat();
+            break;
+          }
+          case 37: {
+            VelocityY = input.ReadFloat();
             break;
           }
         }
