@@ -146,7 +146,14 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
             _nextIncomingMessageLength = 0;
             var message = _messageSerializer.DeserializeIncomingMessage(buffer);
 
-            MessageReceived?.Invoke(message);
+            try
+            {
+                MessageReceived?.Invoke(message);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error when invoking {0} event handler", nameof(MessageReceived));
+            }
             return true;
         }
         catch (Exception e)
@@ -171,6 +178,13 @@ public class Connection<TIncomingMessage, TOutgoingMessage>
             }
         }
 
-        Disconnected?.Invoke();
+        try
+        {
+            Disconnected?.Invoke();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error when invoking {0} event handler", nameof(Disconnected));
+        }
     }
 }

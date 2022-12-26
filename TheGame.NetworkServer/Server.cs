@@ -65,14 +65,40 @@ public class Server<TIncomingMessage, TOutgoingMessage>
                 connection.Disconnected += () =>
                 {
                     _connections.TryRemove(connectionId, out _);
-                    ConnectionClosed?.Invoke(connectionId);
+
+                    try
+                    {
+                        ConnectionClosed?.Invoke(connectionId);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "Error when invoking {0} event handler", nameof(ConnectionClosed));
+                    }
                 };
-                connection.MessageReceived += message => MessageReceived?.Invoke(connectionId, message);
+
+                connection.MessageReceived += message =>
+                {
+                    try
+                    {
+                        MessageReceived?.Invoke(connectionId, message);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "Error when invoking {0} event handler", nameof(MessageReceived));
+                    }
+                };
 
                 if (_connections.TryAdd(connectionId, connection))
                 {
-                    ConnectionOpened?.Invoke(connectionId);
-                    _logger.LogInformation("Started connection {0}", connectionId);
+                    try
+                    {
+                        ConnectionOpened?.Invoke(connectionId);
+                        _logger.LogInformation("Started connection {0}", connectionId);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "Error when invoking {0} event handler", nameof(ConnectionOpened));
+                    }
                 }
                 else
                 {
