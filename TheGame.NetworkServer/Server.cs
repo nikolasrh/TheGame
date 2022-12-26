@@ -131,7 +131,7 @@ public class Server<TIncomingMessage, TOutgoingMessage>
         }
     }
 
-    public void QueueMessage(Guid connectionId, TOutgoingMessage message)
+    public void QueueMessageByConnectionId(Guid connectionId, TOutgoingMessage message)
     {
         _connections[connectionId].QueueMessage(message);
     }
@@ -143,6 +143,18 @@ public class Server<TIncomingMessage, TOutgoingMessage>
             connection.QueueMessage(message);
         }
     }
+
+    public void QueueMessageUnlessConnectionId(Guid connectionId, TOutgoingMessage message)
+    {
+        foreach (var (id, connection) in _connections)
+        {
+            if (id != connectionId)
+            {
+                connection.QueueMessage(message);
+            }
+        }
+    }
+
 
     public void SendMessages()
     {
