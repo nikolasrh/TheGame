@@ -22,6 +22,11 @@ GameNode="*res://GameNode.cs"
 [dotnet]
 
 project/assembly_name="TheGame.GodotClient"
+project/solution_directory="../"
+
+[editor]
+
+export/convert_text_resources_to_binary=true
 
 [input]
 
